@@ -44,6 +44,14 @@
 #include "HAL/MainConfig.h"
 #include "MAL/Kernel.h"
 
+#include "HAL/GPIO.h"
+#include "HAL/bspi.h"
+#include "HAL/Can.h"
+#include "HAL/Can_Cfg.h"
+#include "HAL/sysinit.h"
+#include "HAL/Exceptions.h"
+#include "HAL/IntcInterrupts.h"
+
 
 /* Constants and types  */
 /*============================================================================*/
@@ -80,7 +88,24 @@
  **************************************************************/
 void main(void) 
 {
-	/*Initializes the system for the correct operation*/
+	/* Mode initializations */
+	sysinit_InitMode();
+	/* Clock initializations */
+	sysinit_InitSysClock();
+	/*Initialize LEDs on TRK-MPC560xB board */
+	vfnGPIO_LED_Init(); 
+	/* SBC (System Basis Chip (the transceiver, you know)) dependencies */
+	/* The SBC is initialized by SPI */
+	InitDSPI_1();
+	/* SBC configuration */
+	ConfigureMZC33905DSPI_1();
+    /* CAN Initialization */
+	CAN_Initialization(&can_driver_config);
+	/* Initialize Interrupts */
+	INTC_InitINTCInterrupts();
+	/*Initialize Exception Handlers */
+	EXCEP_InitExceptionHandlers();
+	/*Initializes the system for the correct operation*/ 
 	init_system();
 	/*Initializes the counters with the offsets*/
 	init_Sch_TimeCntrs();

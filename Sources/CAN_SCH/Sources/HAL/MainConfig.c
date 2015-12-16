@@ -179,7 +179,7 @@ void config_Emb_IO(void)
  **************************************************************/
 void init_system(void)
 {
-	init_modes_and_clocks();
+//	init_modes_and_clocks();
 	initPeriClkGen();
 	config_Emb_IO();
 	init_pit_interrupts();

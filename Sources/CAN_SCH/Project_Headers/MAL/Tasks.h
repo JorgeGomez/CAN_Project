@@ -49,6 +49,8 @@
 /* Includes */
 /*============================================================================*/
 #include "HAL/stdtypedef.h"
+#include "MAL/Can_Manager.h"
+#include "Application/dummy.h"
 
 /* Constants and types */
 /*============================================================================*/
@@ -62,6 +64,9 @@ typedef struct{
 
 typedef enum {
 	TASK1,
+	TASK2,
+	TASK3,
+	TASK4,
 	/*number of task*/
 	NUMBER_OF_TASKS
 }E_NUMTASK;
@@ -77,6 +82,10 @@ PUBLIC_FCT void LED_StateMachine(void);
 
 /* Functions prototypes */
 /*============================================================================*/
-void Task1_50ticks(void);
+void Task1_10ticks(void);
+void Task2_50ticks(void);
+void Task3_100ticks(void);
+void Task4_120ticks(void);
+
 
 #endif /* TASKS_H_ */  /* Notice: the file ends with a blank new line to avoid compiler warnings */
