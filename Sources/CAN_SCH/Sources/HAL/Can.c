@@ -1,20 +1,51 @@
-/*~A*/
-/*~+:Header*/
-/*******************************************************************************/
-/**
-\file       can.c
-\author     Alicia Álvarez
-\version    1.0
+/*============================================================================*/
+/*                         			AEP		                                  */
+/*============================================================================*/
+/*                        OBJECT SPECIFICATION                                */
+/*============================================================================*/
+/*!
+ * $Source: can.c $
+ * $Revision: 1.0 $
+ * $Author: Alicia Álvarez $
+ * $Date:   $
+ */
+/*============================================================================*/
+/* DESCRIPTION :                                                              */
+/** \brief
+    General purpose IO functions
 */
-/****************************************************************************************************/
-/*~E*/
-/*~A*/
-/*~+:Imports*/
+/*============================================================================*/
+/* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
+/* AUTOMOTIVE GROUP, Interior Division, Body and Security                     */
+/* ALL RIGHTS RESERVED                                                        */
+/*                                                                            */
+/* The reproduction, transmission, or use of this document or its content is  */
+/* not permitted without express written authority. Offenders will be liable  */
+/* for damages.                                                               */
+/* All rights, including rights created by patent grant or registration of a  */
+/* utility model or design, are reserved.                                     */
+/*                                                                            */
+/*============================================================================*/
+/*============================================================================*/
+/*                    			OBJECT HISTORY                          	  */
+/*============================================================================*/
+/*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
+/*----------------------------------------------------------------------------*/
+/*   1.0 		|  31/10/2008 |								  |Alicia Álvarez */
+/*============================================================================*/
+/*                               			 	                              */
+/*============================================================================*/
+/*
+ * $Log: can.c  $
+  ============================================================================*/
+
+/* Includes */
+/*============================================================================*/
 #include "HAL/Can.h"
 #include "HAL/IntcInterrupts.h"
-/*~E*/
-/*~A*/
-/*~+:Defines*/
+
+/* Constants and types  */
+/*============================================================================*/
 /* CAN Engine Devices */
 #define BIOS_CAN_CANA    (0) /* CAN A */
 #define BIOS_CAN_CANB    (1) /* CAN B */
@@ -23,9 +54,9 @@
 /* Channel Operation Mode */
 #define BIOS_CAN_CH_TX    (1) /* Channel Mode Tx */
 #define BIOS_CAN_CH_RX    (0) /* Channel Mode Rx */
-/*~E*/
-/*~A*/
-/*~+:Variables*/
+ 
+/* Variables */
+/*============================================================================*/
 FLEXCAN2_Type			*bios_cnf_can_eng[2];
 CAN_ConfigDeviceType	*can_config_dev_ptr[2];
 CAN_ConfigType			*can_config_ptr;
@@ -40,11 +71,17 @@ uint8_t CAN_SendFrameInt(uint8_t can_eng, uint8_t can_channel, uint8_t *can_msg_
 void CANB_Isr(void);
 void CAN_IO_Config(void);
 
-/*~E*/
-/*~A*/
 
-/*~+:Private Operations*/
-/*~A*/
+/* Private functions prototypes */
+/*============================================================================*/
+
+
+/* Inline functions */
+/*============================================================================*/
+
+
+/* Private functions */
+/*============================================================================*/
 /*~+:uint8_t CAN_SendFrameInt(uint8_t can_eng, uint8_t can_channel, uint8_t *can_msg_buf, uint8_t len)*/
 uint8_t CAN_SendFrameInt(uint8_t can_eng, uint8_t can_channel, uint8_t *can_msg_buf, uint8_t len)
 {
@@ -75,8 +112,9 @@ uint8_t CAN_SendFrameInt(uint8_t can_eng, uint8_t can_channel, uint8_t *can_msg_
 	bios_cnf_can_eng[can_eng]->BUF[can_channel].CS.B.CODE = 0xC; /* Tx MB */
 	return (0);
 }
-/*~E*/
-/*~A*/
+
+
+
 /*~+:void CANB_Isr(void)*/
 void CANB_Isr(void)
 {
@@ -161,6 +199,7 @@ void CANB_Isr(void)
 	}
 }
 
+
 /**
  * Temporary, this shouldn't be here 
  */
@@ -190,20 +229,16 @@ void CAN_IO_Config(void)
 	SIU.PCR[43].B.WPS = 0; /* Pulldown is enabled for the pad */
 }
 
-/*~E*/
-/*~E*/
-/*~A*/
-/*~+:Public Operations*/
-/*~A*/
+
+/* Exported functions */
+/*============================================================================*/
 /*~+:void CAN_Initialization(CAN_ConfigType *can_config)*/
 void CAN_Initialization(CAN_ConfigType *can_config)
 {
-	/*~A*/
 	/*~+:Local Variables*/
 	uint8_t dev_idx, mb_idx, message_buffer;
 	uint16_t delay = 2000;
 
-	/*~E*/
 	can_config_ptr = can_config;
 	can_config_dev_ptr[0] = can_config_ptr->can_device;
 	bios_cnf_can_eng[0] = &CAN_0;	/** Address of the CAN_0 peripheral */
@@ -212,10 +247,10 @@ void CAN_Initialization(CAN_ConfigType *can_config)
 	/* Initialize pads, pins, etc. This should go somewhere else */
 	CAN_IO_Config();
 	
-	/*~E*/
+ 
 	for (dev_idx=0; dev_idx<can_config_ptr->can_nr_of_devices; dev_idx++)
 	{
-		/*~A*/
+ 
 		/*~+:Device level initialization*/
 		/* Reset the CAN Module. No waiting for softreset confirmation */
 		bios_cnf_can_eng[can_config_dev_ptr[dev_idx]->can_eng_dev]->MCR.B.SOFTRST = 0x1;       
@@ -304,7 +339,7 @@ void CAN_Initialization(CAN_ConfigType *can_config)
 				}
 			}
 			
-			/*~A*/
+ 
 			/*~+:Enable Interrupt for each Message Buffer*/
 			if ( NULL != can_config_dev_ptr[dev_idx]->can_dev_messages[mb_idx].CallbackFcnt )
 			{
@@ -319,7 +354,7 @@ void CAN_Initialization(CAN_ConfigType *can_config)
 					bios_can_prevent_clear_flag_high |= (1<<((message_buffer)-32));
 				}
 			}
-			/*~E*/
+ 
 		}
 
 		/* Negate the HALT bit to enable the module */
@@ -328,7 +363,7 @@ void CAN_Initialization(CAN_ConfigType *can_config)
 		/*~E*/
 	}
 
-	/*~A*/
+ 
 
 	/*~+:Temporary configuration for interrupt handler*/
 
@@ -343,10 +378,9 @@ void CAN_Initialization(CAN_ConfigType *can_config)
 	INTC_InstallINTCInterruptHandler(CANB_Isr,92,4); /**< FLEXCAN buff 16_31 */
 	INTC_InstallINTCInterruptHandler(CANB_Isr,93,4); /**< FLEXCAN buff 32_63 */
 
-	/*~E*/
+ 
 }
-	/*~E*/
-	/*~A*/
+
 	/*~+:void CAN_SendFrame(CAN_PduType *pdu_handler)*/
 void CAN_SendFrame(CAN_PduType *pdu_handler)
 {
@@ -361,8 +395,7 @@ void CAN_SendFrame(CAN_PduType *pdu_handler)
 	}
 }
 
-	/*~E*/
-	/*~A*/
+
 /*~+:uint8_t CAN_ReceiveFrame(uint8_t message_buffer, CAN_MessageDataType *can_message )*/
 /*
 CAN_ReceiveFrame function return val:
@@ -372,7 +405,7 @@ CAN_ReceiveFrame function return val:
 	*/
 uint8_t CAN_ReceiveFrame(uint8_t message_buffer, CAN_MessageDataType *can_message )
 {
-	/*~A*/
+ 
 	/*~+:Local Variables*/
 	uint8_t mask_flag;
 	uint8_t data_idx;
@@ -383,7 +416,6 @@ uint8_t CAN_ReceiveFrame(uint8_t message_buffer, CAN_MessageDataType *can_messag
 	volatile uint32_t mb_int_flag_high;
 	CAN_MessageDataType *message_data_ptr;
 	
-	/*~E*/
 	if (can_config_ptr->can_device[0].can_dev_messages[message_buffer].can_msg_op == BIOS_CAN_CH_RX)
 	{
 		if (message_buffer < 32)
@@ -406,7 +438,7 @@ uint8_t CAN_ReceiveFrame(uint8_t message_buffer, CAN_MessageDataType *can_messag
 			{
 				bios_cnf_can_eng[BIOS_CAN_CANB]->IFRH.R = (uint32_t)(0x1 << (message_buffer-(uint8_t)32));   
 			}
-			/*~A*/
+ 
 			/*~+:Get Message Data*/
 			if ((bios_cnf_can_eng[BIOS_CAN_CANB]->BUF[message_buffer].CS.B.CODE)<8)
 			{
@@ -439,7 +471,7 @@ uint8_t CAN_ReceiveFrame(uint8_t message_buffer, CAN_MessageDataType *can_messag
 			{
 				return_val = 2;
 			}
-			/*~E*/
+ 
 			return_val = 1;
 		}
 		else
@@ -454,8 +486,7 @@ uint8_t CAN_ReceiveFrame(uint8_t message_buffer, CAN_MessageDataType *can_messag
 	return (return_val);
 }
 
-/*~E*/
-/*~A*/
+
 /*~+:void CAN_Stop(void)*/
 void CAN_Stop(void){
 	uint8_t dev_idx;
@@ -486,5 +517,4 @@ void CAN_Stop(void){
 	INTC_InstallINTCInterruptHandler(CANB_Isr,92,0);
 	INTC_InstallINTCInterruptHandler(CANB_Isr,93,0);
 	}
-/*~E*/
-/*~E*/
+/* Notice: the file ends with a blank new line to avoid compiler warnings */

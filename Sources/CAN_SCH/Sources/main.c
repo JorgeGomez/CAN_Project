@@ -31,7 +31,7 @@
 /*============================================================================*/
 /*  REVISION 	|  		DATE  		|     COMMENT 	     	  |		AUTHOR 	  */
 /*----------------------------------------------------------------------------*/
-/*   1.0 		|  	Nov/13/15		|   add main function     |  Jorge Gomez  */
+/*   1.0 		|  	Dic/22/15		|   add main function     |  Jorge Gomez  */
 /*============================================================================*/
 /*                               				                              */
 /*============================================================================*/
@@ -94,7 +94,7 @@ void main(void)
 	sysinit_InitSysClock();
 	/*Initialize LEDs on TRK-MPC560xB board */
 	vfnGPIO_LED_Init(); 
-	/* SBC (System Basis Chip (the transceiver, you know)) dependencies */
+	/* SBC (System Basis Chip dependencies */
 	/* The SBC is initialized by SPI */
 	InitDSPI_1();
 	/* SBC configuration */

@@ -70,9 +70,6 @@ T_ULONG raul_TimeCounter[NUMBER_OF_TASKS];
 /* Private functions */
 /*============================================================================*/
 
-/*Add a new prototipe if you need a new task*/
-PUBLIC_FCT void Task1_50ticks(void);
-
 /* Exported functions */
 /*============================================================================*/
 

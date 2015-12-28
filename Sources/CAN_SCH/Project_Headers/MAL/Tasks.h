@@ -38,7 +38,13 @@
 /*					   |					|      Project_Headers/MAL  	  */
 /*============================================================================*/
 /*                               OBJECT HISTORY                               */
-/* version 1.0		   |     11/13/2015     |  Jose Luis Martinez Vicuña      */
+/* 		 1.0	|     11/13/2015     | 		   Jose Luis Martinez Vicuña      */
+/*============================================================================*/
+/*   1.1		|   Dic/03/15       |Unnecessary tasks were   |Jose Luis Mtz  */
+/*  			|					|		removed			  |	 	          */
+/*============================================================================*/
+/*   1.2		|   Dic/22/15       |Added necessaries task   |Jorge Gomez	  */
+/*  			|					|and dummy functions 	  |	 	          */
 /*============================================================================*/
 /*
  * $Log: Tasks.h  $
@@ -67,6 +73,9 @@ typedef enum {
 	TASK2,
 	TASK3,
 	TASK4,
+	TASK5,
+	TASK6,
+	TASK7,
 	/*number of task*/
 	NUMBER_OF_TASKS
 }E_NUMTASK;
@@ -78,14 +87,16 @@ typedef enum {
 
 /* Exported functions prototypes */
 /*============================================================================*/
-PUBLIC_FCT void LED_StateMachine(void);
+
 
 /* Functions prototypes */
 /*============================================================================*/
-void Task1_10ticks(void);
-void Task2_50ticks(void);
-void Task3_100ticks(void);
-void Task4_120ticks(void);
-
+void Task1_3p125ms(void);
+void Task2_6p25ms(void);
+void Task3_12p5ms(void);
+void Task4_25ms(void);
+void Task5_50ms(void);
+void Task6_100ms(void);
+void Task7_10ms(void);
 
 #endif /* TASKS_H_ */  /* Notice: the file ends with a blank new line to avoid compiler warnings */

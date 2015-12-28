@@ -37,6 +37,9 @@
 /*   1.1		|   Dic/03/15       |Unnecessary tasks were   |Jose Luis Mtz  */
 /*  			|					|		removed			  |	 	          */
 /*============================================================================*/
+/*   1.2		|   Dic/22/15       |Added necessaries task   |Jorge Gomez	  */
+/*  			|					|and dummy functions 	  |	 	          */
+/*============================================================================*/
 /*                      				 		                              */
 /*============================================================================*/
 /*
@@ -58,10 +61,13 @@
 const S_TASK cas_TaskList[NUMBER_OF_TASKS] = 
 {
 	/*	Name					Execution Period(ticks)		Startup delay(ticks)	*/
-		{	Task1_10ticks,					10, 						0	},
-		{	Task2_50ticks,					50, 						1	},
-		{	Task3_100ticks,					100, 						2	},
-		{	Task4_120ticks,					120, 						3	},
+		{	Task1_3p125ms	,				25	, 						0	},
+		{	Task2_6p25ms	,				50	, 						1	},
+		{	Task3_12p5ms	,				100	, 						2	},
+		{	Task4_25ms		,				200	, 						3	},
+		{	Task5_50ms		,				400	, 						4	},
+		{	Task6_100ms		,				800	, 						5	},
+		{	Task7_10ms		,				80	,						6	}
 /*	{	Taskn,							Period, 				  offset}	Add if you need a new task*/
 };
 
@@ -89,56 +95,97 @@ const S_TASK cas_TaskList[NUMBER_OF_TASKS] =
  * --------Add a new definition if you need a new task--------------------------
  * */
 
+/**************************************************************
+ *  Name                 :  Task1_3p125ms
+ *  Description          :  Init function of Scheduler module
+ *  Parameters           :  void
+ *  Return               :  void
+ *  Precondition         :  This function must be called after cpu initialization.
+ *  Postcondition        :  Function gsc_sch_core_exec can be called.
+ **************************************************************/
+void Task1_3p125ms(void)
+{
+	
+}
+
+/**************************************************************
+ *  Name                 :  Task2_6p25ms
+ *  Description          :  Init function of Scheduler module
+ *  Parameters           :  void
+ *  Return               :  void
+ *  Precondition         :  This function must be called after cpu initialization.
+ *  Postcondition        :  Function gsc_sch_core_exec can be called.
+ **************************************************************/
+void Task2_6p25ms(void)
+{
+
+}
+
  /**************************************************************
-  *  Name                 :  Task1_10ticks
+  *  Name                 :  Task3_12p5ms
   *  Description          :  Init function of Scheduler module
   *  Parameters           :  void
   *  Return               :  void
   *  Precondition         :  This function must be called after cpu initialization.
   *  Postcondition        :  Function gsc_sch_core_exec can be called.
   **************************************************************/
-void Task1_10ticks(void)
+void Task3_12p5ms(void)
 {
-	Test();
+	Test(1);
 }
 
 /**************************************************************
- *  Name                 :  Task2_50ticks
+ *  Name                 :  Task4_25ms
  *  Description          :  Init function of Scheduler module
  *  Parameters           :  void
  *  Return               :  void
  *  Precondition         :  This function must be called after cpu initialization.
  *  Postcondition        :  Function gsc_sch_core_exec can be called.
  **************************************************************/
-void Task2_50ticks(void)
+void Task4_25ms(void)
 {
-	CanManager_SendMessage_50ms();
+	Test(2);
 }
 
 /**************************************************************
- *  Name                 :  Task3_100ticks
+ *  Name                 :  Task5_50ms
  *  Description          :  Init function of Scheduler module
  *  Parameters           :  void
  *  Return               :  void
  *  Precondition         :  This function must be called after cpu initialization.
  *  Postcondition        :  Function gsc_sch_core_exec can be called.
  **************************************************************/
-void Task3_100ticks(void)
+void Task5_50ms(void)
 {
-	CanManager_SendMessage_100ms();
+	CanManager_SendMessage_SPEED();
+	Test(3);
 }
 
 /**************************************************************
- *  Name                 :  Task4_120ticks
+ *  Name                 :  Task6_100ms
  *  Description          :  Init function of Scheduler module
  *  Parameters           :  void
  *  Return               :  void
  *  Precondition         :  This function must be called after cpu initialization.
  *  Postcondition        :  Function gsc_sch_core_exec can be called.
  **************************************************************/
-void Task4_120ticks(void)
+void Task6_100ms(void)
 {
-	CanManager_SendMessage_120ms();
+	CanManager_SendMessage_DTC();
+	Test(4);
+}
+
+/**************************************************************
+ *  Name                 :  Task7_10ms
+ *  Description          :  Init function of Scheduler module
+ *  Parameters           :  void
+ *  Return               :  void
+ *  Precondition         :  This function must be called after cpu initialization.
+ *  Postcondition        :  Function gsc_sch_core_exec can be called.
+ **************************************************************/
+void Task7_10ms(void)
+{
+	CanManager_SendMessage_RPM();
 }
 
 /* Exported functions */

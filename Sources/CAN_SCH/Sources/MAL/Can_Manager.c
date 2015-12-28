@@ -1,137 +1,117 @@
-/*~A*/
-/*~+:Module Header*/
-/*******************************************************************************/
-/**
-\file       Can_Manager.c
-\brief      Provide Can Services
-\author     Francisco Martinez
-\version    1.0
-\date       16/08/2015
+/*============================================================================*/
+/*                         			AEP		                                  */
+/*============================================================================*/
+/*                        OBJECT SPECIFICATION                                */
+/*============================================================================*/
+/*!
+ * $Source: Can_Manager.c $
+ * $Revision: 1.0 $
+ * $Author: Francisco Martinez $
+ * $Date: 16/08/2015 $
+ */
+/*============================================================================*/
+/* DESCRIPTION :                                                              */
+/** \brief
+    Provide Can Services
 */
-/*******************************************************************************/
-/*~E*/
-/*~A*/
-/*~+:Import*/
+/*============================================================================*/
+/* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
+/* AUTOMOTIVE GROUP, Interior Division, Body and Security                     */
+/* ALL RIGHTS RESERVED                                                        */
+/*                                                                            */
+/* The reproduction, transmission, or use of this document or its content is  */
+/* not permitted without express written authority. Offenders will be liable  */
+/* for damages.                                                               */
+/* All rights, including rights created by patent grant or registration of a  */
+/* utility model or design, are reserved.                                     */
+/*                                                                            */
+/*============================================================================*/
+/*============================================================================*/
+/*                    			OBJECT HISTORY                          	  */
+/*============================================================================*/
+/*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
+/*----------------------------------------------------------------------------*/
+/*   1.0 		|  16/08/2015 |								  |Francisco Mtz  */
+/*============================================================================*/
+/*   1.1 		|  23/12/2015 |	added new functions			  |Jorge Gomez	  */
+/*============================================================================*/
+/*                               			 	                              */
+/*============================================================================*/
+/*
+ * $Log: Can_Manager.c  $
+  ============================================================================*/
+
+/* Includes */
+/*============================================================================*/
 #include "MAL/Can_Manager.h"
-/*~E*/
-/*~A*/
-/*~+:Defines*/
 
-/*~E*/
-/*~A*/
-/*~+:Variables*/
+/* Constants and types  */
+/*============================================================================*/
 
-/* Temporary CAN Data Messages */
-uint8_t dummy_msg0[8] = {0xCA,0x83,0x15,0x77,0x19,0x56,0x65,0x00};
-uint8_t dummy_msg1[8] = {0x00,0x65,0x56,0x19,0x77,0x15,0x83,0xCA};
-uint8_t dummy_msg2[8] = {0x33,0x44,0x55,0x66,0x88,0x89,0x45,0x4C};
-uint8_t dummy_msg8[2] = {0x00,0x00};
-uint8_t dummy_msg9[8] = {0x33,0x44,0x55,0x66,0x88,0x89,0x45,0x4C};
+
+/* Variables */
+/*============================================================================*/
+
+M_ENG_RPM Eng_RPM;
+M_ENG_SPEED Eng_Speed;
+M_ENG_DTC Eng_DTC;
 
 /** PDU: Protocol data unit */
-CAN_PduType    pdu_handler4 = { 4, 8, dummy_msg0};
-CAN_PduType    pdu_handler5 = { 5, 6, dummy_msg1};
-CAN_PduType    pdu_handler6 = { 6, 2, dummy_msg2};
-CAN_PduType    pdu_handler7 = { 2, 4, dummy_msg2};
-CAN_PduType    pdu_handler8 = { 8, 2, dummy_msg8};
-CAN_PduType    pdu_handler9 = { 9, 8, dummy_msg9};
+CAN_PduType    pdu_handler4_RPM 	= { 4, 3, Eng_RPM.A_RPM};
+CAN_PduType    pdu_handler5_SPEED 	= { 5, 7, (Eng_Speed.A_SPEED + 1)};
+CAN_PduType    pdu_handler6_DTC 	= { 6, 4, Eng_DTC.A_DTC};
 
-uint32_t PduHandlerCnt0 = 0;
-uint32_t PduHandlerCnt6 = 0;
-uint16_t pdu_handler8_cnt = 0;
+/* Private functions prototypes */
+/*============================================================================*/
 
 
-/*~E*/
-/*~A*/
-/*~+:Private Operations*/
+/* Inline functions */
+/*============================================================================*/
 
-/*~E*/
-/*~A*/
-/*~+:Public Operations*/
-/*~A*/
-/*~+:Can Manager Callbacks*/
-CAN_MessageDataType CanMessage_PduHandler0;
-CAN_MessageDataType CanMessage_PduHandler7;
-uint8_t msg_rx_pdu0 = 0;
-uint8_t msg_rx_pdu7 = 0;
-void Can_Manager_PduHandler0(CAN_MessageDataType CanMessage)
+
+/* Private functions */
+/*============================================================================*/
+
+/* Exported functions */
+/*============================================================================*/
+
+/**************************************************************
+ *  Name                 :  CanManager_SendMessage_RPM
+ *  Description          :  Function that sends the RPM 
+ *  Parameters           :  void
+ *  Return               :  void
+ *  Precondition         :  This function must be called every 10 ms.
+ *  Postcondition        :  A CAN message has been sent.
+ **************************************************************/
+void CanManager_SendMessage_RPM(void)
 {
-	CanMessage_PduHandler0 = CanMessage;
-	pdu_handler7.can_mb_nr = 7;
-	pdu_handler7.can_dlc = CanMessage_PduHandler0.msg_dlc_field;
-	pdu_handler7.can_sdu = CanMessage_PduHandler0.msg_data_field;
-	msg_rx_pdu0 = 1;
-	PduHandlerCnt0++;
+	CAN_SendFrame(&pdu_handler4_RPM);
 }
 
-void Can_Manager_PduHandler7(CAN_MessageDataType CanMessage)
+
+/**************************************************************
+ *  Name                 :  CanManager_SendMessage_SPEED
+ *  Description          :  Function that sends the Speed of the motor and other parameters 
+ *  Parameters           :  void
+ *  Return               :  void
+ *  Precondition         :  This function must be called after a MidRes event.
+ *  Postcondition        :  A CAN message has been sent.
+ **************************************************************/
+void CanManager_SendMessage_SPEED(void)
 {
-	
-	CanMessage_PduHandler7 = CanMessage;
-	msg_rx_pdu7 = 1;
-	pdu_handler8_cnt++;
-	dummy_msg8[0]++;
-	if (256 == pdu_handler8_cnt)
-	{
-		pdu_handler8_cnt = 0;
-		dummy_msg8[0] = 0;
-		dummy_msg8[1]++;
-	}
-	PduHandlerCnt6++;
+	CAN_SendFrame(&pdu_handler5_SPEED);
 }
 
-/*~E*/
-/*~A*/
-/*~+:Can Manager Periodic Functions*/
-/*~A*/
-/*~+:CanManager_SendMesage_12p5ms*/
-CAN_MessageDataType CanMessage_PduHandler2;
-void CanManager_SendMessage_50ms(void)
+/**************************************************************
+ *  Name                 :  CanManager_SendMessage_DTC
+ *  Description          :  Function that sends the information of an error 
+ *  Parameters           :  void
+ *  Return               :  void
+ *  Precondition         :  This function must be called after an over current error.
+ *  Postcondition        :  A CAN message has been sent.
+ **************************************************************/
+void CanManager_SendMessage_DTC(void)
 {
-	CAN_SendFrame(&pdu_handler4);
-	if ( 1 == CAN_ReceiveFrame(2, &CanMessage_PduHandler2 ))
-	{
-		pdu_handler9.can_mb_nr = 9;
-		pdu_handler9.can_dlc = CanMessage_PduHandler2.msg_dlc_field;
-		pdu_handler9.can_sdu = CanMessage_PduHandler2.msg_data_field;
-		CAN_SendFrame(&pdu_handler9);
-	}
+	CAN_SendFrame(&pdu_handler6_DTC);
 }
-/*~E*/
-/*~A*/
-/*~+:CanManager_SendMesage_25ms*/
-void CanManager_SendMessage_100ms(void)
-{
-	CAN_SendFrame(&pdu_handler6);
-	/*~A*/
-	/*~+:PDU 0*/
-	
-	
-	if (msg_rx_pdu0)
-	{
-		msg_rx_pdu0 = 0;
-		CAN_SendFrame(&pdu_handler7);
-	}
-	
-	/*~E*/
-	/*~A*/
-	/*~+:PDU 7*/
-	
-	if (msg_rx_pdu7)
-	{
-		msg_rx_pdu7 = 0;
-		CAN_SendFrame(&pdu_handler8);
-	}
-	
-	/*~E*/
-}
-/*~E*/
-/*~A*/
-/*~+:CanManager_SendMessage_100ms*/
-void CanManager_SendMessage_120ms(void)
-{
-	CAN_SendFrame(&pdu_handler5);
-}
-/*~E*/
-/*~E*/
-/*~E*/
+/* Notice: the file ends with a blank new line to avoid compiler warnings */

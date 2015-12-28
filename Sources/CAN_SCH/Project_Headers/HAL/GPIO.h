@@ -1,30 +1,56 @@
-/*******************************************************************************/
-/**
-
-\file       GPIO.h
-\brief      Macro definitions for registers access and I/O handling
-\author     Abraham Tezmol
-\version    0.2
-\date       09/05/2013
+/*============================================================================*/
+/*                                 AEP                                        */
+/*============================================================================*/
+/*                        OBJECT SPECIFICATION 
+ * This file provides the headers of the functions of file MainConfig.c       */
+/*============================================================================*/
+/*!
+ * $Source: GPIO.h
+ * $Revision: version 1.0
+ * $Author: Abraham Tezmol
+ * $Date: 09/05/2013
+ */
+/*============================================================================*/
+/* DESCRIPTION :                                                              */
+/** \
+ *  Macro definitions for registers access and I/O handling
 */
-/*******************************************************************************/
+/*============================================================================*/
+/* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
+/* AUTOMOTIVE GROUP, Interior Division, Body and Security                     */
+/* ALL RIGHTS RESERVED                                                        */
+/*                                                                            */
+/* The reproduction, transmission, or use of this document or its content is  */
+/* not permitted without express written authority. Offenders will be liable  */
+/* for damages.                                                               */
+/* All rights, including rights created by patent grant or registration of a  */
+/* utility model or design, are reserved.                                     */
+/*                                                                            */
+/*============================================================================*/
+/*============================================================================*/
+/*                    REUSE HISTORY - taken over from                         */
+/*============================================================================*/
+/*  DATABASE           |        PROJECT     | FILE VERSION (AND INSTANCE)     */
+/*----------------------------------------------------------------------------*/
+/*                     |       			    |              1.0                */
+/*					   |					|       					       */
+/*============================================================================*/
+/*
+ * $Log: GPIO.h  $
+  ============================================================================*/
 
 #ifndef _GPIO_H        /*prevent duplicated includes*/
 #define _GPIO_H
 
-/*-- Includes ----------------------------------------------------------------*/
-
+/* Includes */
+/*============================================================================*/
 /** Core modules */
 /** MCU derivative information */
 #include "HAL/MCU_derivative.h"
 /** Variable types and common definitions */
 #include "HAL/typedefs.h"
-
-/*-- Variables ---------------------------------------------------------------*/
-
-/*-- Types Definitions -------------------------------------------------------*/
-
-/*-- Defines -----------------------------------------------------------------*/
+/* Constants and types */
+/*============================================================================*/
 
 #define LED1      					68
 #define LED2       					69
@@ -48,7 +74,13 @@
 #define LED_TOGGLE(channel)                 (SIU.GPDO[channel].B.PDO ^= 1) 
 
 
-/*-- Function Prototypes -----------------------------------------------------*/
+/* Exported Variables */
+/*============================================================================*/
+ 
+
+/* Exported functions prototypes */
+/*============================================================================*/
+
 
 void vfnGPIO_Init_channel(uint8_t channel, uint8_t input_output, uint8_t Open_drain);
 void vfnGPIO_Output(uint8_t channel, uint8_t logical_value);
@@ -56,6 +88,6 @@ void vfnGPIO_FlashMainLED(void);
 void vfnGPIO_LED_Init(void);
 
 
-#endif /* _GPIO_H */
+#endif
 
-/*******************************************************************************/
+/* _GPIO_H */ /* Notice: the file ends with a blank new line to avoid compiler warnings */

@@ -1,30 +1,58 @@
-/*~A*/
-/*~+:Header*/
-/*******************************************************************************/
-/**
-\file       can_cfg.c
-\author     Alicia Álvarez
-\version    1.0
+/*============================================================================*/
+/*                         			AEP		                                  */
+/*============================================================================*/
+/*                        OBJECT SPECIFICATION                                */
+/*============================================================================*/
+/*!
+ * $Source: can_cfg.c $
+ * $Revision: 1.0 $
+ * $Author: Alicia Álvarez $
+ * $Date:   $
+ */
+/*============================================================================*/
+/* DESCRIPTION :                                                              */
+/** \brief
+    General purpose IO functions
 */
-/****************************************************************************************************/
-/*~E*/
-/*~A*/
-/*~+:Imports*/
+/*============================================================================*/
+/* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
+/* AUTOMOTIVE GROUP, Interior Division, Body and Security                     */
+/* ALL RIGHTS RESERVED                                                        */
+/*                                                                            */
+/* The reproduction, transmission, or use of this document or its content is  */
+/* not permitted without express written authority. Offenders will be liable  */
+/* for damages.                                                               */
+/* All rights, including rights created by patent grant or registration of a  */
+/* utility model or design, are reserved.                                     */
+/*                                                                            */
+/*============================================================================*/
+/*============================================================================*/
+/*                    			OBJECT HISTORY                          	  */
+/*============================================================================*/
+/*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
+/*----------------------------------------------------------------------------*/
+/*   1.0 		|  			  |								  |Alicia Álvarez */
+/*============================================================================*/
+/*                               			 	                              */
+/*============================================================================*/
+/*
+ * $Log: can_cfg.c  $
+  ============================================================================*/
+
+/* Includes */
+/*============================================================================*/
 #include "HAL/Can_Cfg.h"
 #include "MAL/Can_Manager.h"
-/*~E*/
-/*~A*/
-/*~+:Defines*/
+
+/* Constants and types  */
+/*============================================================================*/
 #define MAX_NUM_RX_FILTERS  (4)
 #define MAX_NUM_TX_FILTERS  (2)
-/*~E*/
-/*~A*/
-/*~+:External Interfaces*/
+
+/* Variables */
+/*============================================================================*/
 extern uint8_t CAN_SendFrameInt(uint8_t can_eng, uint8_t can_channel, uint8_t *can_msg_buf, uint8_t len);
-/*~E*/
-/*~A*/
-/*~+:Variables*/
-/*~A*/
+
 /*~+:CAN Baudrate Configuration*/
 CAN_DevBaudrateType bios_cnf_can_baudrate_options[] = {
 /***********************************************************************************/
@@ -43,28 +71,36 @@ CAN_DevBaudrateType bios_cnf_can_baudrate_options[] = {
 
 
 
-/*~E*/
-/*~A*/
 /*~+:CAN Messages Configuration*/
 CAN_ConfigMsgType bios_cnf_can_messages[] = {
  /* MB#, Message      , Message transmit ,  Message length , Message   ,	Message	  ,	Callback function 
   *     operation		remote request							ID			Mask
   *      TX / RX
   */
-	{ 0, CNF_CAN_CH_RX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x1A0,         0x1F8,      Can_Manager_PduHandler0  },
-	{ 1, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_EXT, 0x12345600,    0x1FFFFFF8, NULL  },
-	{ 2, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x1B0,         0x000,      NULL  },
-	{ 3, CNF_CAN_CH_RX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_EXT, 0x13579B00,    0x00000000, NULL  },
-	{ 4, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x1A7,         0x1F8,      NULL  },
-	{ 5, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_EXT, 0x12345604,    0x1FFFFFF8, NULL  },
-	{ 6, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x052,         0x1F7,      NULL  },
-	{ 7, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_EXT, 0x123456AA,    0x1FFFFFF8, Can_Manager_PduHandler7  },
-	{ 8, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x1CF,         0x1FFFFFFF, NULL  },
-	{ 9, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_EXT, 0x1A654321,    0x1FFFFFFF, NULL  }
+	/*Messages buffer not used*/
+	/*-----------------------------------------------------------------------------------------*/
+	{ 0, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x1A0,    		0x000,   	NULL  },
+	{ 1, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x123,   		0x000, 		NULL  },
+	{ 2, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x1B0,    		0x000,      NULL  },
+	{ 3, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x135,    		0x000, 		NULL  },
+	/*-----------------------------------------------------------------------------------------*/
+	
+	/*Messages for the ECM*/
+	/*-----------------------------------------------------------------------------------------*/
+	{ 4, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x100,    		0x1F8,      NULL  },
+	{ 5, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x101,    		0x1F8, 		NULL  },
+	{ 6, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x102,    		0x1F8,      NULL  },
+	/*-----------------------------------------------------------------------------------------*/
+	
+	/*Messages buffer not used*/
+	/*-----------------------------------------------------------------------------------------*/
+	{ 7, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x123456AA,    0x000, 		NULL  },
+	{ 8, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x1CF,         0x000, 		NULL  },
+	{ 9, CNF_CAN_CH_TX, CNF_CAN_DATA_FRAME, CNF_CAN_IDE_STD, 0x1A654321,    0x000, 		NULL  }
+	/*-----------------------------------------------------------------------------------------*/
 };
 
-/*~E*/
-/*~A*/
+
 /*~+:CAN Device Configuration*/
 CAN_ConfigDeviceType bios_cnf_can_dev[] = 
 {
@@ -80,13 +116,11 @@ CAN_ConfigDeviceType bios_cnf_can_dev[] =
 	}
 };
 
-/*~E*/
-/*~A*/
+
 /*~+:CAN Driver Configuration*/
 CAN_ConfigType can_driver_config = {
 ( sizeof(bios_cnf_can_dev)/sizeof(bios_cnf_can_dev[0]) ),   /* Number of devices */
 bios_cnf_can_dev                                            /* Pointer to devices configuration */
 };
 
-/*~E*/
-/*~E*/
+/* Notice: the file ends with a blank new line to avoid compiler warnings */

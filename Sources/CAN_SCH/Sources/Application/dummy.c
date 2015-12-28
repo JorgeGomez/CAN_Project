@@ -56,59 +56,33 @@
 * \author   Francisco Martinez
 * \return   void
 */
-void Test(void)
+void Test(T_UBYTE lub_LED)
 {
-    static T_UWORD rub_U16Counter = 0;
-    
-    rub_U16Counter++;
-switch (rub_U16Counter)
-{
-case 1:
-{
-LED_ON(LED1);
-LED_OFF(LED2);
-LED_ON(LED3);
-LED_OFF(LED4);
-break;
-}
-case 6:
-{
-LED_OFF(LED1);
-LED_ON(LED2);
-LED_OFF(LED3);
-LED_ON(LED4);
-break;
-}
-case 12:
-{
-LED_ON(LED1);
-LED_OFF(LED2);
-LED_ON(LED3);
-LED_OFF(LED4);
-break;
-}
-case 18:
-{
-LED_OFF(LED1);
-LED_ON(LED2);
-LED_OFF(LED3);
-LED_ON(LED4);
-break;
-}
-case 24:
-{
-LED_OFF(LED1);
-LED_OFF(LED2);
-LED_OFF(LED3);
-LED_OFF(LED4);
-break;
-}
-case 160:
-{
-rub_U16Counter = 0;
-break;
-}
-}
+
+	switch (lub_LED)
+	{
+	case 1:
+	{
+		LED_TOGGLE(LED1);
+		break;
+	}
+	case 2:
+	{
+		LED_TOGGLE(LED2);
+		break;
+	}
+	case 3:
+	{
+		LED_TOGGLE(LED3);
+		break;
+	}
+	case 4:
+	{
+		LED_TOGGLE(LED4);
+		break;
+	}
+
+	}
 
 
 }

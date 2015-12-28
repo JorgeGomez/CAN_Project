@@ -1,32 +1,59 @@
-/*~A*/
-/*~+:Header*/
-/*******************************************************************************/
-/**
-\file       can_types.c
-\author     Alicia Álvarez
-\version    1.0
+/*============================================================================*/
+/*                                 AEP                                        */
+/*============================================================================*/
+/*                        OBJECT SPECIFICATION 
+ * This file provides the headers of the functions of file MainConfig.c       */
+/*============================================================================*/
+/*!
+ * $Source: Can_Types.h
+ * $Revision: version 1.0
+ * $Author: Alicia Álvarez
+ * $Date: 
+ */
+/*============================================================================*/
+/* DESCRIPTION :                                                              */
+/** \
+ * This file provides the different types for CAN protocol
 */
-/****************************************************************************************************/
-/*~E*/
+/*============================================================================*/
+/* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
+/* AUTOMOTIVE GROUP, Interior Division, Body and Security                     */
+/* ALL RIGHTS RESERVED                                                        */
+/*                                                                            */
+/* The reproduction, transmission, or use of this document or its content is  */
+/* not permitted without express written authority. Offenders will be liable  */
+/* for damages.                                                               */
+/* All rights, including rights created by patent grant or registration of a  */
+/* utility model or design, are reserved.                                     */
+/*                                                                            */
+/*============================================================================*/
+/*============================================================================*/
+/*                    REUSE HISTORY - taken over from                         */
+/*============================================================================*/
+/*  DATABASE           |        PROJECT     | FILE VERSION (AND INSTANCE)     */
+/*----------------------------------------------------------------------------*/
+/*                     |       			    |              1.0                */
+/*					   |					|       					       */
+/*============================================================================*/
+/*
+ * $Log: Can_Types.h  $
+  ============================================================================*/
+
 #ifndef CAN_TYPES_H
 #define CAN_TYPES_H
-/*~A*/
-/*~+:Imports*/
+
+/* Includes */
+/*============================================================================*/
 /*Microcontroller specific*/
 #include "HAL/MCU_derivative.h" 
 
 #include "HAL/typedefs.h"
-/*~E*/
-/*~A*/
-/*~+:Defines*/
 
-/*~E*/
-/*~A*/
-/*~+:Typedefs*/
+/* Constants and types */
+/*============================================================================*/
+
 typedef volatile struct FLEXCAN_tag    FLEXCAN2_Type;
-/*~E*/
-/*~A*/
-/*~+:Structs*/
+
 typedef struct{
 uint32_t msg_id_field;                          /* CAN Message ID field */
 uint16_t msg_time_stamp;                        /* CAN Message timestamp */
@@ -81,5 +108,12 @@ CAN_ConfigDeviceType *can_device;             /* Pointer to CAN Config */
 }CAN_ConfigType;
 
 
-/*~E*/
+/* Exported Variables */
+/*============================================================================*/
+
+
+/* Functions prototypes */
+/*============================================================================*/
+
 #endif
+/*CAN_TYPES_H_ */ /* Notice: the file ends with a blank new line to avoid compiler warnings */

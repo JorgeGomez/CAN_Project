@@ -27,7 +27,7 @@
 
 /*-- Function Prototypes -----------------------------------------------------*/
 
-void Test(void);
+void Test(unsigned char lub_LED);
 
 
 #endif /* _DUMMY_H */
