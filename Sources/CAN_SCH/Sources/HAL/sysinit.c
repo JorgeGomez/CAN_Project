@@ -20,6 +20,9 @@
 /*  1.0      | 17/may/2010 |                               | Carlos Calvillo  */
 /* Initial version for the Smart Car Race 2010 contest using Freescale        */
 /* Bolero micro.                                                              */
+/*----------------------------------------------------------------------------*/
+/*  1.1	     | 29/Dec/2015 |                               | Jorge Gomez	  */
+/* Added the selection mode for ADC0                                          */
 /*============================================================================*/
 
 /* Includes */
@@ -164,6 +167,8 @@ void sysinit_InitMode(void)
 	WRITE_ME_PCTL(PCTL_DSPI2, 0x0000);
 	/* Select SIUL to use Peripheral Configuration 0 */
 	WRITE_ME_PCTL(PCTL_SIUL, 0x0000);
+	/* Select ADC0 to use Peripheral Configuration 0 */
+	WRITE_ME_PCTL(PCTL_ADC0, 0x0000);
 	
 	/* Select RUN1 mode */
 	sysinit_ChangeMode(MCTL_RUN1);
@@ -198,6 +203,9 @@ void sysinit_InitMode(void)
 	WRITE_ME_PCTL(PCTL_DSPI2, 0x0000);
 	/* Select SIUL to use Peripheral Configuration 0 */	
 	WRITE_ME_PCTL(PCTL_SIUL, 0x0000);
+	/* Select ADC0 to use Peripheral Configuration 0 */
+	WRITE_ME_PCTL(PCTL_ADC0, 0x0000);
+
 	
 	/* Select RUN0 mode */
 	sysinit_ChangeMode(MCTL_RUN0);

@@ -33,7 +33,9 @@
 /*----------------------------------------------------------------------------*/
 /*   1.0 		|  	Dec/28/15 |Creation of the file			  |  Jorge Gomez  */
 /*----------------------------------------------------------------------------*/
-/*   1.1 		|  	Dec/28/15 |Corrections and fixes added	  |  Jorge Gomez  */
+/*   1.1 		|  	Dec/28/15 |Added  corrections and fixes   |  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.2		|  	Dec/29/15 |Added more comments			  |  Jorge Gomez  */
 /*============================================================================*/
 /*
  * $Log: ADC.h  $
@@ -50,10 +52,11 @@
 
 /* Constants and types */
 /*============================================================================*/
-
+/*ADC0 Modes*/
 #define  ONE_SHOT_MODE      0
 #define  SCAN_MODE          1
 
+/*Channels for ADC0*/
 #define  PWM_DUTY		    1	/*Channel 1 in PB5*/
 #define  PWM_FREC	 	    2	/*Channel 1 in PB6*/
 #define  M_CURRENT		    3	/*Channel 1 in PB7*/

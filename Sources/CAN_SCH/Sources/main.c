@@ -31,7 +31,11 @@
 /*============================================================================*/
 /*  REVISION 	|  		DATE  		|     COMMENT 	     	  |		AUTHOR 	  */
 /*----------------------------------------------------------------------------*/
-/*   1.0 		|  	Dic/22/15		|   add main function     |  Jorge Gomez  */
+/*   1.0 		|  	Dic/22/15		|   Added main function   |  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.1 		|  	Dic/23/15		|Added spi and Can drivers|  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.2 		|  	Dic/22/15		|Added the ADC drivers    |  Jorge Gomez  */
 /*============================================================================*/
 /*                               				                              */
 /*============================================================================*/
@@ -45,6 +49,7 @@
 #include "MAL/Kernel.h"
 
 #include "HAL/GPIO.h"
+#include "HAL/ADC.h"
 #include "HAL/bspi.h"
 #include "HAL/Can.h"
 #include "HAL/Can_Cfg.h"
@@ -107,6 +112,9 @@ void main(void)
 	EXCEP_InitExceptionHandlers();
 	/*Initializes the system for the correct operation*/ 
 	init_system();
+	/*Configure the ADC0*/
+	ADCModeSelector(SCAN_MODE);
+	ADC_Config();
 	/*Initializes the counters with the offsets*/
 	init_Sch_TimeCntrs();
 	/*Starts the scheduler execution*/

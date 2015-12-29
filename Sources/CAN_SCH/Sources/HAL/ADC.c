@@ -33,7 +33,9 @@
 /*----------------------------------------------------------------------------*/
 /*   1.0 		|  	Dec/28/15 |Creation of the file			  |  Jorge Gomez  */
 /*----------------------------------------------------------------------------*/
-/*   1.1 		|  	Dec/28/15 |Corrections and fixes added	  |  Jorge Gomez  */
+/*   1.1 		|  	Dec/28/15 |Added Corrections and fixes 	  |  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.2 		|  	Dec/29/15 |Added more comments			  |  Jorge Gomez  */
 /*============================================================================*/
 /*                               			 	                              */
 /*============================================================================*/
@@ -85,7 +87,7 @@
  /**************************************************************
   *  Name                 :  ADCModeSelector
   *  Description          :  Selects the mode of lecture for the ADC0
-  *  Parameters           :  T_UBYTE
+  *  Parameters           :  T_UBYTE		(ADCMode : ONE_SHOT_MODE or SCAN_MODE)
   *  Return               :  void
   *  Precondition         :  This function must be called after cpu initialization.
   *  Postcondition        :  The lecture mode of the ADC is configured.
@@ -116,8 +118,8 @@
  /**************************************************************
   *  Name                 :  Read_ADC
   *  Description          :  Returns the value of the selected channel
-  *  Parameters           :  T_UBYTE
-  *  Return               :  T_ULONG
+  *  Parameters           :  T_UBYTE	(Channel of ADC0 : PWM_DUTY, PWM_FREC or M_CURRENT)
+  *  Return               :  T_ULONG	(0 < AdcValue < 1023)
   *  Precondition         :  A correct lecture of the ADC.
   *  Postcondition        :  Returns the value of the channel.
   **************************************************************/
