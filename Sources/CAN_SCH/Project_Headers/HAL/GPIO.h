@@ -1,21 +1,19 @@
 /*============================================================================*/
-/*                                  AEP                                       */
+/*                                 AEP                                        */
 /*============================================================================*/
-/*                        OBJECT SPECIFICATION                                */
-/*      This file provides the headers of the functions of Tasks.c            */
+/*                        OBJECT SPECIFICATION 
+ * This file provides the headers of the functions of file MainConfig.c       */
 /*============================================================================*/
 /*!
- * $Source: Tasks.h $
- * $Revision: version 1.0 $
- * $Author: Jose Luis Martinez Vicuña $
- * $Date: Nov/13/2015 $
+ * $Source: GPIO.h
+ * $Revision: version 1.0
+ * $Author: Abraham Tezmol
+ * $Date: 09/05/2013
  */
 /*============================================================================*/
 /* DESCRIPTION :                                                              */
-/** \file
- * This file provides the headers of the functions of the Tasks which are defined
- * in Tasks.c, also is the structure S__TASK which receives the function, period
- * and an offset and the number of tasks to be executed.
+/** \
+ *  Macro definitions for registers access and I/O handling
 */
 /*============================================================================*/
 /* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
@@ -34,69 +32,62 @@
 /*============================================================================*/
 /*  DATABASE           |        PROJECT     | FILE VERSION (AND INSTANCE)     */
 /*----------------------------------------------------------------------------*/
-/*                     |      Scheduler     |            1.0                  */
-/*					   |					|      Project_Headers/MAL  	  */
-/*============================================================================*/
-/*                               OBJECT HISTORY                               */
-/* 		 1.0	|     11/13/2015     | 		   Jose Luis Martinez Vicuña      */
-/*============================================================================*/
-/*   1.1		|   Dic/03/15       |Unnecessary tasks were   |Jose Luis Mtz  */
-/*  			|					|		removed			  |	 	          */
-/*============================================================================*/
-/*   1.2		|   Dic/22/15       |Added necessaries task   |Jorge Gomez	  */
-/*  			|					|and dummy functions 	  |	 	          */
+/*                     |       			    |              1.0                */
+/*					   |					|       					       */
 /*============================================================================*/
 /*
- * $Log: Tasks.h  $
+ * $Log: GPIO.h  $
   ============================================================================*/
-#ifndef TASKS_H_
-#define TASKS_H_
+
+#ifndef _GPIO_H        /*prevent duplicated includes*/
+#define _GPIO_H
 
 /* Includes */
 /*============================================================================*/
-#include "HAL/stdtypedef.h"
-#include "MAL/Can_Manager.h"
-#include "Application/dummy.h"
-
+/** Core modules */
+/** MCU derivative information */
+#include "HAL/MCU_derivative.h"
+/** Variable types and common definitions */
+#include "HAL/typedefs.h"
 /* Constants and types */
 /*============================================================================*/
-typedef void(*T_PFUNC)(void);
 
-typedef struct{
-	T_PFUNC PtrFunc;
-	T_ULONG Period;
-	T_UBYTE Offset;
-}S_TASK;
+#define LED1      					68
+#define LED2       					69
+#define LED3       					70
+#define LED4        				71
 
-typedef enum {
-	TASK1,
-	TASK2,
-	TASK3,
-	TASK4,
-	TASK5,
-	TASK6,
-	TASK7,
-	/*number of task*/
-	NUMBER_OF_TASKS
-}E_NUMTASK;
+#define GPIO_INPUT					0
+#define GPIO_OUTPUT					1
+
+#define GPIO_OPEN_DRAIN_DISABLE		0
+#define GPIO_OPEN_DRAIN_ENABLE		1
+
+/*-- Macros ------------------------------------------------------------------*/
+/* Indicator LEDs handling */
+
+/** Set LED */ 
+#define LED_ON(channel)                     (SIU.GPDO[channel].B.PDO =  0)
+/** Clear LED */ 
+#define LED_OFF(channel)                    (SIU.GPDO[channel].B.PDO =  1)
+/** Toggle LED */ 
+#define LED_TOGGLE(channel)                 (SIU.GPDO[channel].B.PDO ^= 1) 
+
 
 /* Exported Variables */
 /*============================================================================*/
-
-
+ 
 
 /* Exported functions prototypes */
 /*============================================================================*/
 
 
-/* Functions prototypes */
-/*============================================================================*/
-void Task1_3p125ms(void);
-void Task2_6p25ms(void);
-void Task3_12p5ms(void);
-void Task4_25ms(void);
-void Task5_50ms(void);
-void Task6_100ms(void);
-void Task7_10ms(void);
+void vfnGPIO_Init_channel(uint8_t channel, uint8_t input_output, uint8_t Open_drain);
+void vfnGPIO_Output(uint8_t channel, uint8_t logical_value);
+void vfnGPIO_FlashMainLED(void);
+void vfnGPIO_LED_Init(void);
 
-#endif /* TASKS_H_ */  /* Notice: the file ends with a blank new line to avoid compiler warnings */
+
+#endif
+
+/* _GPIO_H */ /* Notice: the file ends with a blank new line to avoid compiler warnings */

@@ -5,10 +5,6 @@
  *========================================================================*
  * ORIGINAL AUTHOR: Jeff Loeliger (r12110)                                *
  * $Log: typedefs.h,v $
- * Revision 1.1  2010/07/21 13:28:05  dmihail1
- * Add to DataBase: 'runtime' folder
- * See: MTWX40737, MTWX40738, MTWX40743, MTWX42016
- *
  * Revision 1.7  2007/05/02 22:46:00  dfreeland
  * Use latest web version
  *
@@ -50,6 +46,33 @@
 
     typedef volatile int32_t vint32_t;
     typedef volatile uint32_t vuint32_t;
+    
+    /*type used for callback function*/
+	typedef void  ( * tCallbackFunction )( void  );
+	
+    /*type used to define pointers to function*/
+    typedef void  ( * tptr_to_fctn )( void );
+    
+    #ifndef NULL
+  		#define    NULL    ( ( void * ) 0 )
+	#endif
+	
+//	typedef volatile unsigned char T_UBYTE;
+//	typedef volatile unsigned short T_UWORD;
+//	typedef volatile unsigned int T_ULONG;
+//
+//	typedef volatile signed char T_SBYTE;
+//	typedef volatile signed short T_SWORD;
+//	typedef volatile signed int T_SLONG;	
+	
+	typedef unsigned char u8;
+	typedef unsigned short u16;
+	typedef unsigned int u32;
+
+	typedef signed char s8;
+	typedef signed short s16;
+	typedef signed int s32;
+
 
 #else
 #ifdef __ghs__    //GreenHills
@@ -83,6 +106,7 @@
     typedef unsigned int uint32_t;
     typedef volatile signed int vint32_t;
     typedef volatile unsigned int vuint32_t;
+
 
 #endif
 #endif

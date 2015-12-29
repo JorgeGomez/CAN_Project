@@ -1,21 +1,19 @@
 /*============================================================================*/
-/*                                  AEP                                       */
+/*                                 AEP                                        */
 /*============================================================================*/
-/*                        OBJECT SPECIFICATION                                */
-/*      This file provides the headers of the functions of Tasks.c            */
+/*                        OBJECT SPECIFICATION 
+ * This file provides the headers of the functions of file MainConfig.c       */
 /*============================================================================*/
 /*!
- * $Source: Tasks.h $
- * $Revision: version 1.0 $
- * $Author: Jose Luis Martinez Vicuña $
- * $Date: Nov/13/2015 $
+ * $Source: Can.h
+ * $Revision: version 1.0
+ * $Author: Alicia Álvarez
+ * $Date: 
  */
 /*============================================================================*/
 /* DESCRIPTION :                                                              */
-/** \file
- * This file provides the headers of the functions of the Tasks which are defined
- * in Tasks.c, also is the structure S__TASK which receives the function, period
- * and an offset and the number of tasks to be executed.
+/** \
+ * This file provides the headers for CAN protocol
 */
 /*============================================================================*/
 /* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
@@ -34,69 +32,37 @@
 /*============================================================================*/
 /*  DATABASE           |        PROJECT     | FILE VERSION (AND INSTANCE)     */
 /*----------------------------------------------------------------------------*/
-/*                     |      Scheduler     |            1.0                  */
-/*					   |					|      Project_Headers/MAL  	  */
-/*============================================================================*/
-/*                               OBJECT HISTORY                               */
-/* 		 1.0	|     11/13/2015     | 		   Jose Luis Martinez Vicuña      */
-/*============================================================================*/
-/*   1.1		|   Dic/03/15       |Unnecessary tasks were   |Jose Luis Mtz  */
-/*  			|					|		removed			  |	 	          */
-/*============================================================================*/
-/*   1.2		|   Dic/22/15       |Added necessaries task   |Jorge Gomez	  */
-/*  			|					|and dummy functions 	  |	 	          */
+/*                     |       			    |              1.0                */
+/*					   |					|       					       */
 /*============================================================================*/
 /*
- * $Log: Tasks.h  $
+ * $Log: Can.h  $
   ============================================================================*/
-#ifndef TASKS_H_
-#define TASKS_H_
+
+#ifndef CAN_H
+#define CAN_H
 
 /* Includes */
 /*============================================================================*/
-#include "HAL/stdtypedef.h"
-#include "MAL/Can_Manager.h"
-#include "Application/dummy.h"
+#include "HAL/Can_Types.h"
 
 /* Constants and types */
 /*============================================================================*/
-typedef void(*T_PFUNC)(void);
 
-typedef struct{
-	T_PFUNC PtrFunc;
-	T_ULONG Period;
-	T_UBYTE Offset;
-}S_TASK;
-
-typedef enum {
-	TASK1,
-	TASK2,
-	TASK3,
-	TASK4,
-	TASK5,
-	TASK6,
-	TASK7,
-	/*number of task*/
-	NUMBER_OF_TASKS
-}E_NUMTASK;
+#define MAX_MSG_TO_DISP (10)
+#define MAX_MSG_TX_TO_DISP (3)
 
 /* Exported Variables */
 /*============================================================================*/
-
-
+extern CAN_MessageDataType    received_messages[64];
+extern CAN_MessageDataType    txd_messages[64];
 
 /* Exported functions prototypes */
 /*============================================================================*/
+extern void CAN_Initialization(CAN_ConfigType *can_config);
+extern void CAN_SendFrame(CAN_PduType *pdu_handler);
+extern uint8_t CAN_ReceiveFrame(uint8_t message_buffer, CAN_MessageDataType *can_message );
+extern void CAN_Stop(void);
 
-
-/* Functions prototypes */
-/*============================================================================*/
-void Task1_3p125ms(void);
-void Task2_6p25ms(void);
-void Task3_12p5ms(void);
-void Task4_25ms(void);
-void Task5_50ms(void);
-void Task6_100ms(void);
-void Task7_10ms(void);
-
-#endif /* TASKS_H_ */  /* Notice: the file ends with a blank new line to avoid compiler warnings */
+#endif
+/*CAN_H_ */ /* Notice: the file ends with a blank new line to avoid compiler warnings */

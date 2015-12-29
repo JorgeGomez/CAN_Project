@@ -4,19 +4,15 @@
 /*                        OBJECT SPECIFICATION                                */
 /*============================================================================*/
 /*!
- * $Source: Kernel.c $
+ * $Source: Can_Manager.c $
  * $Revision: 1.0 $
- * $Author: Jorge Gomez $
- * $Date: Nov/12/15 $
+ * $Author: Francisco Martinez $
+ * $Date: 16/08/2015 $
  */
 /*============================================================================*/
 /* DESCRIPTION :                                                              */
-/** \Kernel
-    Provide the Scheduler functionality.
-    It is a no preemptive Scheduler.
-    Gives the algorithm to execute the different tasks.
-    Do not modify this file.
-    All the modifications shall be do it on Task.c and Task.h
+/** \brief
+    Provide Can Services
 */
 /*============================================================================*/
 /* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
@@ -35,29 +31,35 @@
 /*============================================================================*/
 /*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
 /*----------------------------------------------------------------------------*/
-/*   1.0 		|  	Nov/13/15 |added the core of the scheduler|  Jorge Gomez  */
+/*   1.0 		|  16/08/2015 |								  |Francisco Mtz  */
+/*============================================================================*/
+/*   1.1 		|  23/12/2015 |	added new functions			  |Jorge Gomez	  */
 /*============================================================================*/
 /*                               			 	                              */
 /*============================================================================*/
 /*
- * $Log: Kernel.c  $
+ * $Log: Can_Manager.c  $
   ============================================================================*/
 
 /* Includes */
 /*============================================================================*/
-#include "MAL/Kernel.h"
-
+#include "MAL/Can_Manager.h"
 
 /* Constants and types  */
 /*============================================================================*/
 
 
-
 /* Variables */
 /*============================================================================*/
 
-T_ULONG raul_TimeCounter[NUMBER_OF_TASKS];
+M_ENG_RPM Eng_RPM;
+M_ENG_SPEED Eng_Speed;
+M_ENG_DTC Eng_DTC;
 
+/** PDU: Protocol data unit */
+CAN_PduType    pdu_handler4_RPM 	= { 4, 3, Eng_RPM.A_RPM};
+CAN_PduType    pdu_handler5_SPEED 	= { 5, 7, (Eng_Speed.A_SPEED + 1)};
+CAN_PduType    pdu_handler6_DTC 	= { 6, 4, Eng_DTC.A_DTC};
 
 /* Private functions prototypes */
 /*============================================================================*/
@@ -74,53 +76,42 @@ T_ULONG raul_TimeCounter[NUMBER_OF_TASKS];
 /*============================================================================*/
 
 /**************************************************************
- *  Name                 :  init_Sch_TimeCntrs
- *  Description          :  Init function of Scheduler time counters
+ *  Name                 :  CanManager_SendMessage_RPM
+ *  Description          :  Function that sends the RPM 
  *  Parameters           :  void
  *  Return               :  void
- *  Precondition         :  This function must be called after cpu initialization.
- *  Postcondition        :  Function Sch_function_execution can be called.
+ *  Precondition         :  This function must be called every 10 ms.
+ *  Postcondition        :  A CAN message has been sent.
  **************************************************************/
-void init_Sch_TimeCntrs(void)
+void CanManager_SendMessage_RPM(void)
 {
-	T_ULONG lul_Position;
-	for(lul_Position = 0; lul_Position < NUMBER_OF_TASKS; lul_Position++)
-	{
-		raul_TimeCounter[lul_Position] = cas_TaskList[NUMBER_OF_TASKS].Offset;
-	}
+	CAN_SendFrame(&pdu_handler4_RPM);
+}
+
+
+/**************************************************************
+ *  Name                 :  CanManager_SendMessage_SPEED
+ *  Description          :  Function that sends the Speed of the motor and other parameters 
+ *  Parameters           :  void
+ *  Return               :  void
+ *  Precondition         :  This function must be called after a MidRes event.
+ *  Postcondition        :  A CAN message has been sent.
+ **************************************************************/
+void CanManager_SendMessage_SPEED(void)
+{
+	CAN_SendFrame(&pdu_handler5_SPEED);
 }
 
 /**************************************************************
- *  Name                 :  Sch_function_execution
- *  Description          :  Function of Scheduler 
+ *  Name                 :  CanManager_SendMessage_DTC
+ *  Description          :  Function that sends the information of an error 
  *  Parameters           :  void
  *  Return               :  void
- *  Precondition         :  This function must be called after Scheduler init.
- *  Postcondition        :  The Scheduler it is going to execute.
+ *  Precondition         :  This function must be called after an over current error.
+ *  Postcondition        :  A CAN message has been sent.
  **************************************************************/
-void Sch_function_execution(void)
+void CanManager_SendMessage_DTC(void)
 {
-	T_ULONG lul_ArrayPosition;
-	while(1)
-		{
-			if(rbi_TickFlag == TRUE)
-			{
-				rbi_TickFlag = FALSE;
-				for(lul_ArrayPosition = 0; lul_ArrayPosition < NUMBER_OF_TASKS; lul_ArrayPosition++)
-				{
-					if(raul_TimeCounter[lul_ArrayPosition] != 0)
-					{
-						raul_TimeCounter[lul_ArrayPosition]--;
-					}
-					else
-					{
-						raul_TimeCounter[lul_ArrayPosition] = cas_TaskList[lul_ArrayPosition].Period;
-						cas_TaskList[lul_ArrayPosition].PtrFunc();
-					}
-				}
-			}
-		}
+	CAN_SendFrame(&pdu_handler6_DTC);
 }
-
-
- /* Notice: the file ends with a blank new line to avoid compiler warnings */
+/* Notice: the file ends with a blank new line to avoid compiler warnings */

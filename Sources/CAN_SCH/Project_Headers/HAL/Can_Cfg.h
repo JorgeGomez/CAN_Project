@@ -1,21 +1,19 @@
 /*============================================================================*/
-/*                                  AEP                                       */
+/*                                 AEP                                        */
 /*============================================================================*/
-/*                        OBJECT SPECIFICATION                                */
-/*      This file provides the headers of the functions of Tasks.c            */
+/*                        OBJECT SPECIFICATION 
+ * This file provides the headers of the functions of file MainConfig.c       */
 /*============================================================================*/
 /*!
- * $Source: Tasks.h $
- * $Revision: version 1.0 $
- * $Author: Jose Luis Martinez Vicuña $
- * $Date: Nov/13/2015 $
+ * $Source: can_cfg.h
+ * $Revision: version 1.0
+ * $Author: Alicia Álvarez
+ * $Date: 
  */
 /*============================================================================*/
 /* DESCRIPTION :                                                              */
-/** \file
- * This file provides the headers of the functions of the Tasks which are defined
- * in Tasks.c, also is the structure S__TASK which receives the function, period
- * and an offset and the number of tasks to be executed.
+/** \
+ * This file provides the headers and defines for the configuration of FlexCan
 */
 /*============================================================================*/
 /* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
@@ -34,69 +32,68 @@
 /*============================================================================*/
 /*  DATABASE           |        PROJECT     | FILE VERSION (AND INSTANCE)     */
 /*----------------------------------------------------------------------------*/
-/*                     |      Scheduler     |            1.0                  */
-/*					   |					|      Project_Headers/MAL  	  */
-/*============================================================================*/
-/*                               OBJECT HISTORY                               */
-/* 		 1.0	|     11/13/2015     | 		   Jose Luis Martinez Vicuña      */
-/*============================================================================*/
-/*   1.1		|   Dic/03/15       |Unnecessary tasks were   |Jose Luis Mtz  */
-/*  			|					|		removed			  |	 	          */
-/*============================================================================*/
-/*   1.2		|   Dic/22/15       |Added necessaries task   |Jorge Gomez	  */
-/*  			|					|and dummy functions 	  |	 	          */
+/*                     |       			    |              1.0                */
+/*					   |					|       					       */
 /*============================================================================*/
 /*
- * $Log: Tasks.h  $
+ * $Log: can_cfg.h  $
   ============================================================================*/
-#ifndef TASKS_H_
-#define TASKS_H_
+
+#ifndef CAN_CFG_H 
+#define CAN_CFG_H 
 
 /* Includes */
 /*============================================================================*/
-#include "HAL/stdtypedef.h"
-#include "MAL/Can_Manager.h"
-#include "Application/dummy.h"
+#include "HAL/Can_Types.h"
 
 /* Constants and types */
 /*============================================================================*/
-typedef void(*T_PFUNC)(void);
 
-typedef struct{
-	T_PFUNC PtrFunc;
-	T_ULONG Period;
-	T_UBYTE Offset;
-}S_TASK;
+#define CNF_CAN_BUS_CLK (1) /* System Clock Source */
+#define CNF_CAN_OSC_CLK (0) /* Oscillator Clock Source */
 
-typedef enum {
-	TASK1,
-	TASK2,
-	TASK3,
-	TASK4,
-	TASK5,
-	TASK6,
-	TASK7,
-	/*number of task*/
-	NUMBER_OF_TASKS
-}E_NUMTASK;
+/* Lowest Buffer Transmitted First */
+#define CNF_CAN_LBUF_ON  (1) /* Lowest number buffer is transmitted first */
+#define CNF_CAN_LBUF_OFF (0) /* Buffer with highest priority is transmitted first */
+
+/* FIFO Enable */
+#define CNF_CAN_FIFO_EN  (1) /* FIFO enabled */
+#define CNF_CAN_FIFO_DIS (0) /* FIFO not enabled */
+
+/* Message buffer filter mode */
+/*AlAl check about queue*/
+#define CNF_CAN_IND_MASK     (1) /* Individual Rx masking enabled */
+#define CNF_CAN_GLOBAL_MASK  (0) /* Individual Rx masking disabled */
+
+/* Bus Off Recovery Mode */
+#define CNF_CAN_BOFF_EN  (1) /* Automatic recovering from Bus Off state enabled */
+#define CNF_CAN_BOFF_DIS (0) /* Automatic recovering from Bus Off state disabled, according to CAN Spec 2.0 part B */
+
+/* Remote Transmission Request */
+#define CNF_CAN_REMOTE_FRAME (1) /* Indicates the current MB has a Remote Frame to be transmitted  */
+#define CNF_CAN_DATA_FRAME   (0) /* Indicates the current MB has a Data Frame to be transmitted  */
+
+/* Frame Format */
+#define CNF_CAN_IDE_EXT      (1) /* Frame Extended Format  */
+#define CNF_CAN_IDE_STD      (0) /* Frame Standard Format */
+
+/* Channel Operation Mode */
+#define CNF_CAN_CH_TX    (1) /* Channel Mode Tx */
+#define CNF_CAN_CH_RX    (0) /* Channel Mode Rx */
+
+/* CAN Engine Devices */
+#define CANA    (0) /* CAN A */
+#define CANB    (1) /* CAN B */
+#define CANC    (2) /* CAN C */
+#define CAND    (3) /* CAN D */
 
 /* Exported Variables */
 /*============================================================================*/
 
-
-
-/* Exported functions prototypes */
-/*============================================================================*/
-
+extern CAN_ConfigType can_driver_config; /* CAN Driver configuration structure */
 
 /* Functions prototypes */
 /*============================================================================*/
-void Task1_3p125ms(void);
-void Task2_6p25ms(void);
-void Task3_12p5ms(void);
-void Task4_25ms(void);
-void Task5_50ms(void);
-void Task6_100ms(void);
-void Task7_10ms(void);
 
-#endif /* TASKS_H_ */  /* Notice: the file ends with a blank new line to avoid compiler warnings */
+#endif
+/*CAN_CFG_H_ */ /* Notice: the file ends with a blank new line to avoid compiler warnings */

@@ -33,10 +33,9 @@
 /*----------------------------------------------------------------------------*/
 /*   1.0 		|  	Nov/13/15		| initialize the GPIO     |  Jorge Gomez  */
 /*============================================================================*/
-/*   1.1		|   Dic/03/15       |Changes were added to the|Jose Luis Mtz  */
-/*  			|					|  configuration for LIN  |	 	          */
-/*============================================================================*/
-/*                              					                          */
+/*   1.1		|   Dic/22/15       |Unnecessary func've been |	Jorge Gomez   */
+/*  			|					|removed and the tick time|	 	          */
+/*  			|					|has been changed to 125us|	 	          */
 /*============================================================================*/
 /*
  * $Log: MainConfig.c  $
@@ -61,10 +60,7 @@ T_BOOLEAN rbi_TickFlag = FALSE;
 
 /* Private functions prototypes */
 /*============================================================================*/
-void init_modes_and_clocks(void);
-void disableWatchdog(void);
-void initPeriClkGen(void);
-void config_Emb_IO(void);
+
 void pit_config_fnc(void);
 void pit_isr(void);
 void init_pit_interrupts(void);
@@ -78,91 +74,6 @@ void init_pit_interrupts(void);
 
 /* Private functions */
 /*============================================================================*/
-
-/**************************************************************
- *  Name                 :  init_modes_and_clocks
- *  Description          :  Init function of Scheduler module
- *  Parameters           :  void
- *  Return               :  void
- *  Precondition         :  This function must be called on the cpu initialization.
- *  Postcondition        :  The cpu are running on RUN mode 1.
- **************************************************************/
-void init_modes_and_clocks(void) 
-{
-	ME.MER.R = 0x0000001D;          	/* Enable DRUN, RUN0, SAFE, RESET modes */
-	
-	/* Initialize PLL before turning it on: */
-	CGM.FMPLL_CR.R = 0x02400100;    	/* 8 MHz xtal: Set PLL0 to 64 MHz */   
-	ME.RUN[0].R = 0x001F0074;       	/* RUN0 cfg: 16MHzIRCON,OSC0ON,PLL0ON,syclk=PLL0 */
-	ME.RUNPC[1].R = 0x00000010; 	  	/* Peri. Cfg. 1 settings: only run in RUN0 mode */
-  	ME.PCTL[68].R = 0x01; 	    		/*MPC56xxB/S SIU: select ME.RUNPC[1] */  
-  	ME.PCTL[92].R = 0x01; 	      		/* MPC56xxB/S PIT: select ME.RUNPC[1] */
-  	
-  	/* Mode Transition to enter RUN0 mode: */
-  	ME.MCTL.R = 0x40005AF0;         /* Enter RUN0 Mode & Key */
-  	ME.MCTL.R = 0x4000A50F;         /* Enter RUN0 Mode & Inverted Key */  
-  	while (ME.GS.B.S_MTRANS) {}     /* Wait for mode transition to complete */    
-                                  	
-  	/* Note: could wait here using timer and/or I_TC IRQ */
-  	while(ME.GS.B.S_CURRENTMODE != 4) {} /* Verify RUN0 is the current mode */
-}
-
-/**************************************************************
- *  Name                 :  disableWatchdog
- *  Description          :  Function to disable the watchdog
- *  Parameters           :  void
- *  Return               :  void
- *  Precondition         :  This function must be called after cpu initialization.
- *  Postcondition        :  The watchdog is disabled.
- **************************************************************/
-void disableWatchdog(void) 
-{
-	SWT.SR.R = 0x0000c520;     /* Write keys to clear soft lock bit */
-  	SWT.SR.R = 0x0000d928; 
-  	SWT.CR.R = 0x8000010A;     /* Clear watchdog enable (WEN) */
-}        
-
-/**************************************************************
- *  Name                 :  initPeriClkGen
- *  Description          :  Init function of peripherials set 
- *  Parameters           :  void
- *  Return               :  void
- *  Precondition         :  This function must be called on the cpu initialization.
- *  Postcondition        :  The pheripherial set can be used.
- **************************************************************/
-void initPeriClkGen(void) 
-{
-	/* Use the following code as required for MPC56xxB or MPC56xxS:*/
-	CGM.SC_DC0.R = 0x80;
-  	CGM.SC_DC1.R = 0x80;   /* MPC56xxB/S: Enable peri set 3 sysclk divided by 1 */
-  	CGM.SC_DC2.R = 0x80;   
-}
-
-/**************************************************************
- *  Name                 :  config_Emb_IO
- *  Description          :  Init function of GPIO embedded
- *  Parameters           :  void
- *  Return               :  void
- *  Precondition         :  This function must be called on the cpu initialization.
- *  Postcondition        :  The GPIOs can be used.
- **************************************************************/
-void config_Emb_IO(void)
-{
-  	/* led is seted as outputs */
-  	SIU.PCR[LED_1].R = 0x200;
-  	
-  	/* Configure pad PB2 for AF1 func: LIN0TX */
-    SIU.PCR[18].B.SRC = 1; 
-    SIU.PCR[18].B.OBE = 1;
-    SIU.PCR[18].B.PA = 1; 
-    
-    SIU.PCR[19].B.IBE = 1;     /* Configure pad PB3 for LIN0RX */
-
-  	/* led init led in off */
-	SIU.GPDO[LED_1].R = ON;
-
-} 
-
 
 
 /* Exported functions */
@@ -179,9 +90,6 @@ void config_Emb_IO(void)
  **************************************************************/
 void init_system(void)
 {
-	init_modes_and_clocks();
-	initPeriClkGen();
-	config_Emb_IO();
 	init_pit_interrupts();
 }
 
@@ -250,8 +158,8 @@ void pit_config_fnc(void)
     PIT.PITMCR.B.MDIS   = 1;    
         /*Disable PIT for initialization         */
 
-    PIT.CH[0].LDVAL.R  = 64000;    
-        /*value loaded in the Timer0: 64k    */
+    PIT.CH[0].LDVAL.R  = 8000;    
+        /*value loaded in the Timer0: 8000 = (64Mhz * 125us)   */
 
     PIT.CH[0].TCTRL.B.TIE  = 1;    
         /*Timer 0 Interrupt : Enable    */

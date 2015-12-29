@@ -1,21 +1,19 @@
 /*============================================================================*/
-/*                                  AEP                                       */
+/*                                 AEP                                        */
 /*============================================================================*/
-/*                        OBJECT SPECIFICATION                                */
-/*      This file provides the headers of the functions of Tasks.c            */
+/*                        OBJECT SPECIFICATION 
+ * This file provides the headers of the functions of file MainConfig.c       */
 /*============================================================================*/
 /*!
- * $Source: Tasks.h $
- * $Revision: version 1.0 $
- * $Author: Jose Luis Martinez Vicuña $
- * $Date: Nov/13/2015 $
+ * $Source: Can_Manager.h
+ * $Revision: version 1.0
+ * $Author: Francisco Martinez
+ * $Date: 16/08/2015
  */
 /*============================================================================*/
 /* DESCRIPTION :                                                              */
-/** \file
- * This file provides the headers of the functions of the Tasks which are defined
- * in Tasks.c, also is the structure S__TASK which receives the function, period
- * and an offset and the number of tasks to be executed.
+/** \
+ *  Provide Can Services for CAN
 */
 /*============================================================================*/
 /* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
@@ -34,69 +32,70 @@
 /*============================================================================*/
 /*  DATABASE           |        PROJECT     | FILE VERSION (AND INSTANCE)     */
 /*----------------------------------------------------------------------------*/
-/*                     |      Scheduler     |            1.0                  */
-/*					   |					|      Project_Headers/MAL  	  */
+/*                     |       			    |              1.0                */
+/*					   |					|       					      */
 /*============================================================================*/
-/*                               OBJECT HISTORY                               */
-/* 		 1.0	|     11/13/2015     | 		   Jose Luis Martinez Vicuña      */
-/*============================================================================*/
-/*   1.1		|   Dic/03/15       |Unnecessary tasks were   |Jose Luis Mtz  */
-/*  			|					|		removed			  |	 	          */
-/*============================================================================*/
-/*   1.2		|   Dic/22/15       |Added necessaries task   |Jorge Gomez	  */
-/*  			|					|and dummy functions 	  |	 	          */
+/* added variables and |      CAN_project   |              1.1                */
+/*	some operations    |					|   Jorge Gomez 			      */
 /*============================================================================*/
 /*
- * $Log: Tasks.h  $
+ * $Log: Can_Manager.h  $
   ============================================================================*/
-#ifndef TASKS_H_
-#define TASKS_H_
+#ifndef __CAN_MANAGER
+#define __CAN_MANAGER
 
 /* Includes */
 /*============================================================================*/
-#include "HAL/stdtypedef.h"
-#include "MAL/Can_Manager.h"
-#include "Application/dummy.h"
+#include "HAL/Can.h"
 
 /* Constants and types */
 /*============================================================================*/
-typedef void(*T_PFUNC)(void);
 
-typedef struct{
-	T_PFUNC PtrFunc;
-	T_ULONG Period;
-	T_UBYTE Offset;
-}S_TASK;
+typedef union{		
+	struct{
+		T_UWORD RPM;
+		T_UBYTE Engine_Active_Status;
+	}E_RPM;
+	
+	T_UBYTE A_RPM[3];
+	
+}M_ENG_RPM;
 
-typedef enum {
-	TASK1,
-	TASK2,
-	TASK3,
-	TASK4,
-	TASK5,
-	TASK6,
-	TASK7,
-	/*number of task*/
-	NUMBER_OF_TASKS
-}E_NUMTASK;
+typedef union{
+	struct{
+		T_ULONG DutyCycle;
+		T_UWORD Period;
+		T_UWORD Current;
+	}E_SPEED;
+	T_UBYTE A_SPEED[8];
+}M_ENG_SPEED;
+
+typedef union{
+	struct{
+		struct{
+				T_UBYTE HSB;
+				T_UBYTE MSB;
+				T_UBYTE LSB;
+			}DTC;
+
+			T_UBYTE DTC_Status;
+		}E_DTC;
+
+	T_UBYTE A_DTC[4];
+
+}M_ENG_DTC;
 
 /* Exported Variables */
-/*============================================================================*/
-
-
+/*============================================================================*/ 
+extern M_ENG_RPM Eng_RPM;
+extern M_ENG_SPEED Eng_Speed;
+extern M_ENG_DTC Eng_DTC;
 
 /* Exported functions prototypes */
 /*============================================================================*/
+extern void CanManager_SendMessage_RPM(void);
+extern void CanManager_SendMessage_SPEED(void);
+extern void CanManager_SendMessage_DTC(void);
 
-
-/* Functions prototypes */
-/*============================================================================*/
-void Task1_3p125ms(void);
-void Task2_6p25ms(void);
-void Task3_12p5ms(void);
-void Task4_25ms(void);
-void Task5_50ms(void);
-void Task6_100ms(void);
-void Task7_10ms(void);
-
-#endif /* TASKS_H_ */  /* Notice: the file ends with a blank new line to avoid compiler warnings */
+#endif 
+/* __CAN_MANAGER */ /* Notice: the file ends with a blank new line to avoid compiler warnings */
