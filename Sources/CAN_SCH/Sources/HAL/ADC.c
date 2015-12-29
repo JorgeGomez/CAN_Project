@@ -32,6 +32,8 @@
 /*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
 /*----------------------------------------------------------------------------*/
 /*   1.0 		|  	Dec/28/15 |Creation of the file			  |  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.1 		|  	Dec/28/15 |Corrections and fixes added	  |  Jorge Gomez  */
 /*============================================================================*/
 /*                               			 	                              */
 /*============================================================================*/
@@ -119,10 +121,10 @@
   *  Precondition         :  A correct lecture of the ADC.
   *  Postcondition        :  Returns the value of the channel.
   **************************************************************/
- T_ULONG Read_ADC(T_UBYTE channel)
+ T_ULONG Read_ADC(T_UBYTE lub_Channel)
  {
 	 T_ULONG lul_AdcValue = 0;
-	 lul_AdcValue = ADC_0.CDR[channel].B.CDATA;
+	 lul_AdcValue = ADC_0.CDR[lub_Channel].B.CDATA;
 	 return lul_AdcValue;
  }
 

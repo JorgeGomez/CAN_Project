@@ -32,6 +32,8 @@
 /*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
 /*----------------------------------------------------------------------------*/
 /*   1.0 		|  	Dec/28/15 |Creation of the file			  |  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.1 		|  	Dec/28/15 |Corrections and fixes added	  |  Jorge Gomez  */
 /*============================================================================*/
 /*
  * $Log: ADC.h  $
@@ -43,8 +45,8 @@
 /* Includes */
 /*============================================================================*/
 
-#include "MPC5606B.h"
-#include "stdtypedef.h"
+#include "HAL/MPC5606B.h"
+#include "HAL/stdtypedef.h"
 
 /* Constants and types */
 /*============================================================================*/
@@ -62,9 +64,9 @@
 /* Exported functions prototypes */
 /*============================================================================*/
 
-PUBLIC_DATA void ADCModeSelector(T_UBYTE lub_AdcMode);
-PUBLIC_DATA void ADC_Config(void);
-PUBLIC_DATA T_ULONG Read_ADC(T_UBYTE channel);
+PUBLIC_FCT void ADCModeSelector(T_UBYTE lub_AdcMode);
+PUBLIC_FCT void ADC_Config(void);
+PUBLIC_FCT T_ULONG Read_ADC(T_UBYTE lub_Channel);
 
 /* Functions prototypes */
 /*============================================================================*/
