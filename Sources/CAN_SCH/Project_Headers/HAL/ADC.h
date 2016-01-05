@@ -36,6 +36,8 @@
 /*   1.1 		|  	Dec/28/15 |Added  corrections and fixes   |  Jorge Gomez  */
 /*----------------------------------------------------------------------------*/
 /*   1.2		|  	Dec/29/15 |Added more comments			  |  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.3		|  	Jan/04/15 |Correction in function ReadADC |  Jorge Gomez  */
 /*============================================================================*/
 /*
  * $Log: ADC.h  $
@@ -69,7 +71,7 @@
 
 PUBLIC_FCT void ADCModeSelector(T_UBYTE lub_AdcMode);
 PUBLIC_FCT void ADC_Config(void);
-PUBLIC_FCT T_ULONG Read_ADC(T_UBYTE lub_Channel);
+PUBLIC_FCT T_UWORD Read_ADC(T_UBYTE lub_Channel);
 
 /* Functions prototypes */
 /*============================================================================*/

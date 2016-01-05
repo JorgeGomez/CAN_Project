@@ -36,8 +36,8 @@
 /*   1.1 		|  	Dec/28/15 |Added Corrections and fixes 	  |  Jorge Gomez  */
 /*----------------------------------------------------------------------------*/
 /*   1.2 		|  	Dec/29/15 |Added more comments			  |  Jorge Gomez  */
-/*============================================================================*/
-/*                               			 	                              */
+/*----------------------------------------------------------------------------*/
+/*   1.3		|  	Jan/04/15 |Correction in function ReadADC |  Jorge Gomez  */
 /*============================================================================*/
 /*
  * $Log: ADC.c  $
@@ -123,10 +123,10 @@
   *  Precondition         :  A correct lecture of the ADC.
   *  Postcondition        :  Returns the value of the channel.
   **************************************************************/
- T_ULONG Read_ADC(T_UBYTE lub_Channel)
+ T_UWORD Read_ADC(T_UBYTE lub_Channel)
  {
-	 T_ULONG lul_AdcValue = 0;
-	 lul_AdcValue = ADC_0.CDR[lub_Channel].B.CDATA;
+	 T_UWORD lul_AdcValue = 0;
+	 lul_AdcValue = (T_UWORD)(ADC_0.CDR[lub_Channel].B.CDATA);
 	 return lul_AdcValue;
  }
 
