@@ -81,6 +81,16 @@ void Test(T_UBYTE lub_LED)
 		LED_TOGGLE(LED4);
 		break;
 	}
+	case 5:
+		{
+			LED_ON(LED4);
+			break;
+		}
+	case 6:
+		{
+			LED_OFF(LED4);
+			break;
+		}
 
 	}
 

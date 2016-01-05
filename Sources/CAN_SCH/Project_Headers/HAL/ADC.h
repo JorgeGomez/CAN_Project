@@ -1,21 +1,18 @@
 /*============================================================================*/
-/*                                  AEP                                       */
+/*                        			AEP		                                  */
 /*============================================================================*/
 /*                        OBJECT SPECIFICATION                                */
-/*      This file provides the headers of the functions of Tasks.c            */
 /*============================================================================*/
 /*!
- * $Source: Tasks.h $
+ * $Source: ADC.h $
  * $Revision: version 1.0 $
- * $Author: Jose Luis Martinez Vicuña $
- * $Date: Nov/13/2015 $
+ * $Author: Jorge Gomez $
+ * $Date: Dec/28/2015 $
  */
 /*============================================================================*/
 /* DESCRIPTION :                                                              */
-/** \file
- * This file provides the headers of the functions of the Tasks which are defined
- * in Tasks.c, also is the structure S__TASK which receives the function, period
- * and an offset and the number of tasks to be executed.
+/** \ADC
+ *  Provide the functions to enable the ADC and get its information
 */
 /*============================================================================*/
 /* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
@@ -30,74 +27,54 @@
 /*                                                                            */
 /*============================================================================*/
 /*============================================================================*/
-/*                    REUSE HISTORY - taken over from                         */
+/*                    			OBJECT HISTORY                          	  */
 /*============================================================================*/
-/*  DATABASE           |        PROJECT     | FILE VERSION (AND INSTANCE)     */
+/*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
 /*----------------------------------------------------------------------------*/
-/*                     |      Scheduler     |            1.0                  */
-/*					   |					|      Project_Headers/MAL  	  */
-/*============================================================================*/
-/*                               OBJECT HISTORY                               */
-/* 		 1.0	|     11/13/2015     | 		   Jose Luis Martinez Vicuña      */
-/*============================================================================*/
-/*   1.1		|   Dic/03/15       |Unnecessary tasks were   |Jose Luis Mtz  */
-/*  			|					|		removed			  |	 	          */
-/*============================================================================*/
-/*   1.2		|   Dic/22/15       |Added necessaries task   |Jorge Gomez	  */
-/*  			|					|and dummy functions 	  |	 	          */
+/*   1.0 		|  	Dec/28/15 |Creation of the file			  |  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.1 		|  	Dec/28/15 |Added  corrections and fixes   |  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.2		|  	Dec/29/15 |Added more comments			  |  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.3		|  	Jan/04/15 |Correction in function ReadADC |  Jorge Gomez  */
 /*============================================================================*/
 /*
- * $Log: Tasks.h  $
+ * $Log: ADC.h  $
   ============================================================================*/
-#ifndef TASKS_H_
-#define TASKS_H_
+
+#ifndef ADC_H                               /* To avoid double inclusion */
+#define ADC_H
 
 /* Includes */
 /*============================================================================*/
+
+#include "HAL/MPC5606B.h"
 #include "HAL/stdtypedef.h"
-#include "HAL/ADC.h"
-#include "MAL/Can_Manager.h"
-#include "Application/dummy.h"
 
 /* Constants and types */
 /*============================================================================*/
-typedef void(*T_PFUNC)(void);
+/*ADC0 Modes*/
+#define  ONE_SHOT_MODE      0
+#define  SCAN_MODE          1
 
-typedef struct{
-	T_PFUNC PtrFunc;
-	T_ULONG Period;
-	T_UBYTE Offset;
-}S_TASK;
-
-typedef enum {
-	TASK1,
-	TASK2,
-	TASK3,
-	TASK4,
-	TASK5,
-	TASK6,
-	TASK7,
-	/*number of task*/
-	NUMBER_OF_TASKS
-}E_NUMTASK;
+/*Channels for ADC0*/
+#define  PWM_DUTY		    1	/*Channel 1 in PB5*/
+#define  PWM_FREC	 	    2	/*Channel 1 in PB6*/
+#define  M_CURRENT		    3	/*Channel 1 in PB7*/
 
 /* Exported Variables */
 /*============================================================================*/
 
-
-
 /* Exported functions prototypes */
 /*============================================================================*/
 
+PUBLIC_FCT void ADCModeSelector(T_UBYTE lub_AdcMode);
+PUBLIC_FCT void ADC_Config(void);
+PUBLIC_FCT T_UWORD Read_ADC(T_UBYTE lub_Channel);
 
 /* Functions prototypes */
 /*============================================================================*/
-void Task1_3p125ms(void);
-void Task2_6p25ms(void);
-void Task3_12p5ms(void);
-void Task4_25ms(void);
-void Task5_50ms(void);
-void Task6_100ms(void);
-void Task7_10ms(void);
 
-#endif /* TASKS_H_ */  /* Notice: the file ends with a blank new line to avoid compiler warnings */
+#endif
+/* ADC_H_  Notice: the file ends with a blank new line to avoid compiler warnings */
