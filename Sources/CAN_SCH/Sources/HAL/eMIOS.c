@@ -33,9 +33,13 @@
 /*============================================================================*/
 /*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
 /*----------------------------------------------------------------------------*/
-/*   1.0 		|  	Jan/05/15 |Creation of the file			  |  Jorge Gomez  */
-/*============================================================================*/
-/*                               			 	                              */
+/*----------------------------------------------------------------------------*/
+/*   1.0 		|  	Jan/05/15 |Creation of the file and added |  			  */
+/* 				|			  |the functionality of MCB for	  |	Jorge Gomez	  */
+/* 				|			  |eMIOS0.		  				  |				  */
+/*----------------------------------------------------------------------------*/
+/*   1.1 		|  	Jan/07/15 |Added the functionality of     |			      */
+/* 				|			  | OPWFMB for	eMIOS0.           | Jorge Gomez	  */
 /*============================================================================*/
 /*
  * $Log: eMIOS.c  $
@@ -126,4 +130,95 @@ void eMIOS0_isr_CH_16_17(void)
 	}
 }
 
+/**************************************************************
+ *  Name                 :  init_eMIOS1
+ *  Description          :  Init function to enable the eMIOS1
+ *  Parameters           :  void
+ *  Return               :  void
+ *  Precondition         :  This function must be called after cpu initialization.
+ *  Postcondition        :  The eMIOS1 is enabled.
+ **************************************************************/
+void init_eMIOS1(void)
+{
+	EMIOS_1.MCR.B.GPRE= 127;   							/* Divide 64 MHz sysclk by 127+1 = 128 for 500KHz eMIOS1 clk*/
+  	EMIOS_1.MCR.B.GPREN = 1;  							/* Enable eMIOS1 clock */
+  	EMIOS_1.MCR.B.GTBE = 1;   							/* Enable global time base */
+  	EMIOS_1.MCR.B.FRZ = 1;    							/* Enable stopping channels when in debug mode */
+}
+
+/**************************************************************
+ *  Name                 :  init_eMIOS1_PWM
+ *  Description          :  Configures the operation mode of eMIOS1
+ *  						as Output Pulse Width and Frequency Modulation Buffered 
+ *  						and configures the pin PG7 as its output
+ *  Parameters           :  void
+ *  Return               :  void
+ *  Precondition         :  This function must be called after eMIOS0 initialization.
+ *  Postcondition        :  The output pin (PG7) and the eMIOS1 are configured.
+ **************************************************************/
+void init_eMIOS1_PWM(void)
+{								
+  	EMIOS_1.CH[MOTOR_CH].CADR.R = INITIAL_DUTYCYCLE;    /* Sets the initial Duty cycle*/
+  	EMIOS_1.CH[MOTOR_CH].CBDR.R = INITIAL_PERIOD;       /* Sets the initial Period*/
+  	EMIOS_1.CH[MOTOR_CH].CCR.B.FORCMB = 1;				/*Compare to the register A*/
+  	EMIOS_1.CH[MOTOR_CH].CCR.B.FORCMA = 1;				/*Compare to the register B*/
+  	EMIOS_1.CH[MOTOR_CH].CCR.B.BSL = 0x0;				/* Use counter bus B,C,D,or E */
+  	EMIOS_1.CH[MOTOR_CH].CCR.B.EDPOL = 0;				/* Polarity-leading edge sets output/trailing clears */
+  	EMIOS_1.CH[MOTOR_CH].CCR.B.MODE = 0x5A; 			/* Mode is Output Pulse Width and Frequency Modulation Buffered */
+  	EMIOS_1.CH[MOTOR_CH].CCR.B.UCPRE = 0;				/* Set channel prescaler divide by 1 */
+  	EMIOS_1.CH[MOTOR_CH].CCR.B.UCPEN = 1;    			/* Enable prescaler*/
+  	EMIOS_1.CH[MOTOR_CH].CCR.B.FREN  = 1; 				/* Enable stopping channels when in debug mode */
+  	SIU.PCR[PCR_MOTOR_PG7].R = 0x0600;           		/* MPC56xxB: Assign eMIOS1 PCR to pad */
+}
+
+/**************************************************************
+ *  Name                 :  Set_DutyCycle_eMIOS1
+ *  Description          :  Sets the Duty cycle of the PWM
+ *  Parameters           :  T_UWORD (0 <= Duty <= 1000)
+ *  Return               :  void
+ *  Precondition         :  This function must be called after initialization of the eMIOS1 mode.
+ *  Postcondition        :  The Duty cycle is set.
+ **************************************************************/
+void Set_DutyCycle_eMIOS1(void)
+{
+	T_UWORD luw_RegA = 0;
+	T_UWORD luw_RegB = 0;
+	luw_RegB = (T_UWORD)(EMIOS_1.CH[MOTOR_CH].CBDR.R);				/*Gets the value of the period*/
+	luw_RegA = (T_UWORD)((luw_RegB * ruw_DutyCycle_PWM)/1000);		/* Adjust the duty cycle for the new period*/
+	EMIOS_1.CH[MOTOR_CH].CADR.R = luw_RegA;							/* Changes the duty cycle of the PWM */
+}
+
+/**************************************************************
+ *  Name                 :  Set_PeriodPWM_eMIOS1
+ *  Description          :  Sets the Period of the PWM goes from 0.1 to 100 ms
+ *  Parameters           :  T_UWORD (0 <= Period <= 1000), T_UWORD (0 <= DutyCycle <= 1000)
+ *  Return               :  void
+ *  Precondition         :  This function must be called after initialization of the eMIOS1 mode.
+ *  Postcondition        :  The Duty cycle is set.
+ **************************************************************/
+void Set_PeriodPWM_eMIOS1(void)
+{
+	T_UWORD luw_RegisterB = 0;
+	T_UWORD luw_RegisterA = 0;
+	if(ruw_Period_PWM < 19)
+	{
+		EMIOS_1.MCR.B.GPRE= 1; 													/* Set the Global prescaler to 1 + 1 = 2*/
+		luw_RegisterB = 3200 * (ruw_Period_PWM + 1);							/* This is the reduction for the equation luw_RegisterB = (SysClk)/[(GlobalPrescaler)*(f)]
+																				/* Where SysClk = 64M, GlobalPrescaler = 2 and f = 10000/(luw_Period + 1)*/
+		EMIOS_1.CH[MOTOR_CH].CBDR.R = luw_RegisterB; 							/* Changes the Period of the PWM */
+		luw_RegisterA = (T_UWORD)((luw_RegisterB * ruw_DutyCycle_PWM)/1000);	/* Adjust the duty cycle for the new period*/
+		EMIOS_1.CH[MOTOR_CH].CADR.R = luw_RegisterA;							/* Changes the duty cycle of the PWM */
+	}
+	else if((ruw_Period_PWM >= 19) && (ruw_Period_PWM <= 1000))
+	{
+		EMIOS_1.MCR.B.GPRE= 127; 												/* Set the Global prescaler to 127 + 1 = 128*/
+		luw_RegisterB = 50 * (ruw_Period_PWM + 1);								/* This is the reduction for the equation luw_RegisterB = (SysClk)/[(GlobalPrescaler)*(f)]
+																				/* Where SysClk = 64M, GlobalPrescaler = 128 and f = 10000/(luw_Period + 1)*/
+		EMIOS_1.CH[MOTOR_CH].CBDR.R = luw_RegisterB; 							/* Changes the Period of the PWM */
+		luw_RegisterA = (T_UWORD)((luw_RegisterB * ruw_DutyCycle_PWM)/1000);	/* Adjust the duty cycle for the new period*/
+		EMIOS_1.CH[MOTOR_CH].CADR.R = luw_RegisterA;							/* Changes the duty cycle of the PWM */
+	}
+	else{	/*Do nothing*/	}
+	
+}
 /* Notice: the file ends with a blank new line to avoid compiler warnings */
