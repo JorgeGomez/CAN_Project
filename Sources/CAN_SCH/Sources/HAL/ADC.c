@@ -125,9 +125,14 @@
   **************************************************************/
  T_UWORD Read_ADC(T_UBYTE lub_Channel)
  {
-	 T_UWORD lul_AdcValue = 0;
-	 lul_AdcValue = (T_UWORD)(ADC_0.CDR[lub_Channel].B.CDATA);
-	 return lul_AdcValue;
+	 T_UWORD luw_AdcValue = 0;
+	 luw_AdcValue = (T_UWORD)(ADC_0.CDR[lub_Channel].B.CDATA);
+	 if(luw_AdcValue > 1000)
+	 {
+		 luw_AdcValue = 1000;
+	 }
+	 else {	/*Do nothing*/	 }
+	 return luw_AdcValue;
  }
 
  /* Notice: the file ends with a blank new line to avoid compiler warnings */
