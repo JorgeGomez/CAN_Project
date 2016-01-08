@@ -5,9 +5,9 @@
 /*============================================================================*/
 /*!
  * $Source: eMIOS.h $
- * $Revision: 1.0 $
+ * $Revision: 1.2 $
  * $Author: Jorge Gomez $
- * $Date: Jan/05/15 $
+ * $Date: Jan/05/16 $
  */
 /*============================================================================*/
 /* DESCRIPTION :                                                              */
@@ -33,12 +33,17 @@
 /*============================================================================*/
 /*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
 /*----------------------------------------------------------------------------*/
-/*   1.0 		|  	Jan/05/15 |Creation of the file and added |  			  */
+/*   1.0 		|  	Jan/05/16 |Creation of the file and added |  			  */
 /* 				|			  |the functionality of MCB for	  |	Jorge Gomez	  */
 /* 				|			  |eMIOS0.		  				  |				  */
 /*----------------------------------------------------------------------------*/
-/*   1.1 		|  	Jan/07/15 |Added the functionality of     |			      */
+/*   1.1 		|  	Jan/07/16 |Added the functionality of     |			      */
 /* 				|			  | OPWFMB for	eMIOS0.           | Jorge Gomez	  */
+/*----------------------------------------------------------------------------*/
+/*   1.2 		|  	Jan/08/16 |Added the functions and		  |			      */
+/* 				|			  |errors correction.             | Jorge Gomez	  */
+/*============================================================================*/
+/*                               			 	                              */
 /*============================================================================*/
 /*
  * $Log: eMIOS.h  $
@@ -49,9 +54,9 @@
 
 /* Includes */
 /*============================================================================*/
-#include "MPC5606B.h"
-#include "stdtypedef.h"
-#include "IntcInterrupts.h"
+#include "HAL/MPC5606B.h"
+#include "HAL/stdtypedef.h"
+#include "HAL/IntcInterrupts.h"
 
 /* Constants and types */
 /*============================================================================*/
@@ -77,19 +82,21 @@
 /* Exported Variables */
 /*============================================================================*/
 PUBLIC_DATA T_BOOLEAN rbi_Flag45Deg;	/*Flag for an interruption every 45 degree*/
-PUBLIC_DATA T_UWORD ruw_DutyCycle_PWM;	/*DutyCycle goes from 0 to 1000*/
-PUBLIC_DATA T_UWORD ruw_Period_PWM;		/*Period goes from 0 to 1000*/
 
 /* Exported functions prototypes */
 /*============================================================================*/
 void init_eMIOS0(void);
 void init_eMIOS0_MCB(void);
-void eMIOS0_isr_CH_16_17(void);
 
 void init_eMIOS1(void);
 void init_eMIOS1_PWM(void);
-void Set_DutyCycle_eMIOS1(void);
-void Set_PeriodPWM_eMIOS1(void);
+
+T_UWORD Read_eMIOS1_RegB(void);
+void Write_eMIOS1_RegB(T_UWORD luw_BValue);
+T_UWORD Read_eMIOS1_RegA(void);
+void Write_eMIOS1_RegA(T_UWORD luw_AValue);
+void Set_Global_Prescaler(T_UBYTE lub_GlobalPrescalerValue);
+
 
 /* Functions prototypes */
 /*============================================================================*/

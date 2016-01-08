@@ -5,9 +5,9 @@
 /*============================================================================*/
 /*!
  * $Source: eMIOS.c $
- * $Revision: 1.0 $
+ * $Revision: 1.2 $
  * $Author: Jorge Gomez $
- * $Date: Jan/05/15 $
+ * $Date: Jan/05/16 $
  */
 /*============================================================================*/
 /* DESCRIPTION :                                                              */
@@ -33,13 +33,17 @@
 /*============================================================================*/
 /*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
 /*----------------------------------------------------------------------------*/
-/*----------------------------------------------------------------------------*/
-/*   1.0 		|  	Jan/05/15 |Creation of the file and added |  			  */
+/*   1.0 		|  	Jan/05/16 |Creation of the file and added |  			  */
 /* 				|			  |the functionality of MCB for	  |	Jorge Gomez	  */
 /* 				|			  |eMIOS0.		  				  |				  */
 /*----------------------------------------------------------------------------*/
-/*   1.1 		|  	Jan/07/15 |Added the functionality of     |			      */
+/*   1.1 		|  	Jan/07/16 |Added the functionality of     |			      */
 /* 				|			  | OPWFMB for	eMIOS0.           | Jorge Gomez	  */
+/*----------------------------------------------------------------------------*/
+/*   1.2 		|  	Jan/08/16 |Added the functions and		  |			      */
+/* 				|			  |errors correction.             | Jorge Gomez	  */
+/*============================================================================*/
+/*                               			 	                              */
 /*============================================================================*/
 /*
  * $Log: eMIOS.c  $
@@ -56,12 +60,11 @@
 
 /* Variables */
 /*============================================================================*/
-T_UWORD ruw_DutyCycle_PWM;			/*DutyCycle goes from 0 to 1000*/
-T_UWORD ruw_Period_PWM;				/*Period goes from 0 to 1000*/
 T_BOOLEAN rbi_Flag45Deg = FALSE;	/*Flag for an interruption every 45 degree*/
 
 /* Private functions prototypes */
 /*============================================================================*/
+void eMIOS0_isr_CH_16_17(void);
 
 /* Inline functions */
 /*============================================================================*/
@@ -115,11 +118,12 @@ void init_eMIOS0_MCB()
 
 /**************************************************************
  *  Name                 :  eMIOS0_isr_CH_16_17
- *  Description          :  ISR of the interruption of the eMIOS0 channels 16 and 17
+ *  Description          :  ISR of the interruption of the eMIOS0 channels 16 and 17. 
+ *  						Called every 45°.
  *  Parameters           :  void
  *  Return               :  void
  *  Precondition         :  This function must be called after an interruption.
- *  Postcondition        :  
+ *  Postcondition        :  The flag for a 45° is set.
  **************************************************************/
 void eMIOS0_isr_CH_16_17(void)
 {
@@ -172,53 +176,79 @@ void init_eMIOS1_PWM(void)
 }
 
 /**************************************************************
- *  Name                 :  Set_DutyCycle_eMIOS1
- *  Description          :  Sets the Duty cycle of the PWM
- *  Parameters           :  T_UWORD (0 <= Duty <= 1000)
- *  Return               :  void
- *  Precondition         :  This function must be called after initialization of the eMIOS1 mode.
- *  Postcondition        :  The Duty cycle is set.
+ *  Name                 :  Read_eMIOS1_RegB
+ *  Description          :  Returns the value of the B register
+ *  Parameters           :  void
+ *  Return               :  T_UWORD (0 <= Value of the B Register <= 65535)
+ *  Precondition         :  This function must be called after initialization of the eMIOS1.
+ *  Postcondition        :  The value of the B register is given.
  **************************************************************/
-void Set_DutyCycle_eMIOS1(void)
+T_UWORD Read_eMIOS1_RegB(void)
 {
-	T_UWORD luw_RegA = 0;
-	T_UWORD luw_RegB = 0;
-	luw_RegB = (T_UWORD)(EMIOS_1.CH[MOTOR_CH].CBDR.R);				/*Gets the value of the period*/
-	luw_RegA = (T_UWORD)((luw_RegB * ruw_DutyCycle_PWM)/1000);		/* Adjust the duty cycle for the new period*/
-	EMIOS_1.CH[MOTOR_CH].CADR.R = luw_RegA;							/* Changes the duty cycle of the PWM */
+	return (T_UWORD)(EMIOS_1.CH[MOTOR_CH].CBDR.R);		/*Returns the value of the B register*/
 }
 
 /**************************************************************
- *  Name                 :  Set_PeriodPWM_eMIOS1
- *  Description          :  Sets the Period of the PWM goes from 0.1 to 100 ms
- *  Parameters           :  T_UWORD (0 <= Period <= 1000), T_UWORD (0 <= DutyCycle <= 1000)
- *  Return               :  void
+ *  Name                 :  Write_eMIOS1_RegB
+ *  Description          :  Writes the value on the B register
+ *  Parameters           :  void
+ *  Return               :  T_UWORD (0 <= Value to set in the B Register <= 65535)
+ *  Precondition         :  This function must be called after initialization of the eMIOS1.
+ *  Postcondition        :  The value in the B register is changed.
+ **************************************************************/
+void Write_eMIOS1_RegB(T_UWORD luw_BValue)
+{
+	EMIOS_1.CH[MOTOR_CH].CBDR.R = luw_BValue;			/* Writes the value on the B register*/
+}
+
+/**************************************************************
+ *  Name                 :  Read_eMIOS1_RegA
+ *  Description          :  Returns the value of the A register
+ *  Parameters           :  void
+ *  Return               :  T_UWORD (0 <= Value of the A Register <= 65535)
+ *  Precondition         :  This function must be called after initialization of the eMIOS1.
+ *  Postcondition        :  The value of the A register is given.
+ **************************************************************/
+T_UWORD Read_eMIOS1_RegA(void)
+{
+	return (T_UWORD)(EMIOS_1.CH[MOTOR_CH].CADR.R);		/*Returns the value of the A register*/
+}
+
+/**************************************************************
+ *  Name                 :  Write_eMIOS1_RegA
+ *  Description          :  Writes the value on the A register
+ *  Parameters           :  void
+ *  Return               :  T_UWORD (0 <= Value to set in the A Register <= 65535)
+ *  Precondition         :  This function must be called after initialization of the eMIOS1.
+ *  Postcondition        :  The value in the A register is changed.
+ **************************************************************/
+void Write_eMIOS1_RegA(T_UWORD luw_AValue)
+{
+	EMIOS_1.CH[MOTOR_CH].CADR.R = luw_AValue;			/* Writes the value on the A register*/
+}
+
+/**************************************************************
+ *  Name                 :  Set_Global_Prescaler
+ *  Description          :  Sets the value in the global prescaler.
+ *  Parameters           :  void
+ *  Return               :  T_UWORD (0 <= GlobalPrescalerValue <= 255)
  *  Precondition         :  This function must be called after initialization of the eMIOS1 mode.
  *  Postcondition        :  The Duty cycle is set.
  **************************************************************/
-void Set_PeriodPWM_eMIOS1(void)
+void Set_Global_Prescaler(T_UWORD luw_GlobalPrescalerValue)
 {
-	T_UWORD luw_RegisterB = 0;
-	T_UWORD luw_RegisterA = 0;
-	if(ruw_Period_PWM < 19)
+	if(luw_GlobalPrescalerValue != 0)
 	{
-		EMIOS_1.MCR.B.GPRE= 1; 													/* Set the Global prescaler to 1 + 1 = 2*/
-		luw_RegisterB = 3200 * (ruw_Period_PWM + 1);							/* This is the reduction for the equation luw_RegisterB = (SysClk)/[(GlobalPrescaler)*(f)]
-																				/* Where SysClk = 64M, GlobalPrescaler = 2 and f = 10000/(luw_Period + 1)*/
-		EMIOS_1.CH[MOTOR_CH].CBDR.R = luw_RegisterB; 							/* Changes the Period of the PWM */
-		luw_RegisterA = (T_UWORD)((luw_RegisterB * ruw_DutyCycle_PWM)/1000);	/* Adjust the duty cycle for the new period*/
-		EMIOS_1.CH[MOTOR_CH].CADR.R = luw_RegisterA;							/* Changes the duty cycle of the PWM */
+		if(luw_GlobalPrescalerValue > 256)
+		{
+			luw_GlobalPrescalerValue = 256;
+		}
+		EMIOS_1.MCR.B.GPRE = luw_GlobalPrescalerValue - 1;	/* Set the Global prescaler - 1 to get the wanted value*/
 	}
-	else if((ruw_Period_PWM >= 19) && (ruw_Period_PWM <= 1000))
+	else
 	{
-		EMIOS_1.MCR.B.GPRE= 127; 												/* Set the Global prescaler to 127 + 1 = 128*/
-		luw_RegisterB = 50 * (ruw_Period_PWM + 1);								/* This is the reduction for the equation luw_RegisterB = (SysClk)/[(GlobalPrescaler)*(f)]
-																				/* Where SysClk = 64M, GlobalPrescaler = 128 and f = 10000/(luw_Period + 1)*/
-		EMIOS_1.CH[MOTOR_CH].CBDR.R = luw_RegisterB; 							/* Changes the Period of the PWM */
-		luw_RegisterA = (T_UWORD)((luw_RegisterB * ruw_DutyCycle_PWM)/1000);	/* Adjust the duty cycle for the new period*/
-		EMIOS_1.CH[MOTOR_CH].CADR.R = luw_RegisterA;							/* Changes the duty cycle of the PWM */
+		EMIOS_1.MCR.B.GPRE = luw_GlobalPrescalerValue;		/*If the value of the prescaler is 0 assign the value directly*/
 	}
-	else{	/*Do nothing*/	}
-	
 }
+
 /* Notice: the file ends with a blank new line to avoid compiler warnings */
