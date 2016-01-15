@@ -38,6 +38,8 @@
 /*   1.2		|  	Dec/29/15 |Added more comments			  |  Jorge Gomez  */
 /*----------------------------------------------------------------------------*/
 /*   1.3		|  	Jan/04/15 |Correction in function ReadADC |  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.4		|  	Jan/12/15 | Added interruption of Watchdog|  Jose Martinez*/
 /*============================================================================*/
 /*
  * $Log: ADC.h  $
@@ -51,6 +53,8 @@
 
 #include "HAL/MPC5606B.h"
 #include "HAL/stdtypedef.h"
+#include "HAL/IntcInterrupts.h"
+#include "Application/RPM.h"
 
 /* Constants and types */
 /*============================================================================*/
@@ -72,6 +76,7 @@
 PUBLIC_FCT void ADCModeSelector(T_UBYTE lub_AdcMode);
 PUBLIC_FCT void ADC_Config(void);
 PUBLIC_FCT T_UWORD Read_ADC(T_UBYTE lub_Channel);
+PUBLIC_FCT T_UWORD Read_ADC_1024(T_UBYTE lub_Channel);
 
 /* Functions prototypes */
 /*============================================================================*/
