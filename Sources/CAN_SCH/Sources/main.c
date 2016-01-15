@@ -36,6 +36,8 @@
 /*   1.1 		|  	Dic/23/15		|Added spi and Can drivers|  Jorge Gomez  */
 /*----------------------------------------------------------------------------*/
 /*   1.2 		|  	Dic/22/15		|Added the ADC drivers    |  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.3 		|  	Jan/07/15		|Added eMIOS drivers      |  Jorge Gomez  */
 /*============================================================================*/
 /*                               				                              */
 /*============================================================================*/
@@ -56,7 +58,7 @@
 #include "HAL/sysinit.h"
 #include "HAL/Exceptions.h"
 #include "HAL/IntcInterrupts.h"
-
+#include "HAL/eMIOS.h"
 
 /* Constants and types  */
 /*============================================================================*/
@@ -90,6 +92,7 @@
  *  Precondition         :  The correct initialization of the startup code.
  *  Postcondition        :  The cpu can be configured and the program can start.
  *  SW design			 :	5.2
+ *  Requirement			 :	Req_Init. 1.1
  **************************************************************/
 void main(void) 
 {
@@ -115,6 +118,11 @@ void main(void)
 	/*Configure the ADC0*/
 	ADCModeSelector(SCAN_MODE);
 	ADC_Config();
+	/*Configure the eMIOS*/
+	init_eMIOS0();
+	init_eMIOS0_MCB();
+	init_eMIOS1();
+	init_eMIOS1_PWM();
 	/*Initializes the counters with the offsets*/
 	init_Sch_TimeCntrs();
 	/*Starts the scheduler execution*/

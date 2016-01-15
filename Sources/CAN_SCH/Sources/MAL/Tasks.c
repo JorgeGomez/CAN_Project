@@ -40,6 +40,13 @@
 /*   1.2		|   Dic/22/15       |Added necessaries task   |Jorge Gomez	  */
 /*  			|					|and dummy functions 	  |	 	          */
 /*============================================================================*/
+/*   1.3		|   Jan/13/15       |Added Functions to read  |Jose Luis Mtz  */
+/*				|					|ADC 					  |				  */
+/*============================================================================*/
+/*   1.4		|   Jan/14/15       |Added Functions to 	  |Jorge Gomez	  */
+/*				|					|Calculate the motor RPMs |				  */
+/*				|					|and send the CAN message |				  */
+/*============================================================================*/
 /*                      				 		                              */
 /*============================================================================*/
 /*
@@ -54,7 +61,7 @@
 
 /* Constants and types  */
 /*============================================================================*/
-
+#define OFFSET_TO_COMPENSE		9
 /*
  * --------------------List of task for the scheduler-----------------------------
  * */
@@ -102,17 +109,12 @@ const S_TASK cas_TaskList[NUMBER_OF_TASKS] =
  *  Return               :  void
  *  Precondition         :  This function must be called after cpu initialization.
  *  Postcondition        :  Function gsc_sch_core_exec can be called.
+ *  SW design			 :	5.3
+ *  Requirement			 :	Req_OS. 2.3
  **************************************************************/
 void Task1_3p125ms(void)
 {
-	if(Read_ADC(M_CURRENT)>512)
-	{
-		Test(5);
-	}
-	else
-	{
-		Test(6);
-	}
+	ruw_DutyCycle_PWM = Read_ADC(PWM_DUTY);
 }
 
 /**************************************************************
@@ -122,10 +124,12 @@ void Task1_3p125ms(void)
  *  Return               :  void
  *  Precondition         :  This function must be called after cpu initialization.
  *  Postcondition        :  Function gsc_sch_core_exec can be called.
+ *  SW design			 :	5.3
+ *  Requirement			 :	Req_OS. 2.4
  **************************************************************/
 void Task2_6p25ms(void)
 {
-	
+	ruw_Period_PWM = (Read_ADC(PWM_FREC)) + OFFSET_TO_COMPENSE;
 }
 
  /**************************************************************
@@ -135,10 +139,12 @@ void Task2_6p25ms(void)
   *  Return               :  void
   *  Precondition         :  This function must be called after cpu initialization.
   *  Postcondition        :  Function gsc_sch_core_exec can be called.
-  **************************************************************/
+ *  SW design			 :	5.3
+ *  Requirement			 :	Req_OS. 2.5
+ **************************************************************/
 void Task3_12p5ms(void)
 {
-	Test(1);
+	ruw_Current = Read_ADC_1024(M_CURRENT);
 }
 
 /**************************************************************
@@ -148,10 +154,12 @@ void Task3_12p5ms(void)
  *  Return               :  void
  *  Precondition         :  This function must be called after cpu initialization.
  *  Postcondition        :  Function gsc_sch_core_exec can be called.
+ *  SW design			 :	5.3
+ *  Requirement			 :	Req_OS. 2.6
  **************************************************************/
 void Task4_25ms(void)
 {
-	Test(2);
+	
 }
 
 /**************************************************************
@@ -161,11 +169,13 @@ void Task4_25ms(void)
  *  Return               :  void
  *  Precondition         :  This function must be called after cpu initialization.
  *  Postcondition        :  Function gsc_sch_core_exec can be called.
+ *  SW design			 :	5.3
+ *  Requirement			 :	Req_OS. 2.7
  **************************************************************/
 void Task5_50ms(void)
 {
-	CanManager_SendMessage_SPEED();
-	Test(3);
+	Set_DutyCycle_eMIOS1();
+	Set_PeriodPWM_eMIOS1();
 }
 
 /**************************************************************
@@ -175,11 +185,12 @@ void Task5_50ms(void)
  *  Return               :  void
  *  Precondition         :  This function must be called after cpu initialization.
  *  Postcondition        :  Function gsc_sch_core_exec can be called.
+ *  SW design			 :	5.3
+ *  Requirement			 :	Req_OS. 2.8
  **************************************************************/
 void Task6_100ms(void)
 {
-	CanManager_SendMessage_DTC();
-//	Test(4);
+	Calculate_RPMs();
 }
 
 /**************************************************************
@@ -189,9 +200,12 @@ void Task6_100ms(void)
  *  Return               :  void
  *  Precondition         :  This function must be called after cpu initialization.
  *  Postcondition        :  Function gsc_sch_core_exec can be called.
+ *  SW design			 :	5.3
+ *  Requirement			 :	Req_RPM 5.0
  **************************************************************/
 void Task7_10ms(void)
 {
+	RPM_NextSample();
 	CanManager_SendMessage_RPM();
 }
 

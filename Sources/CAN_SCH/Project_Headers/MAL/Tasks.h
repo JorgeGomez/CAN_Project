@@ -57,7 +57,9 @@
 #include "HAL/stdtypedef.h"
 #include "HAL/ADC.h"
 #include "MAL/Can_Manager.h"
-#include "Application/dummy.h"
+#include "Application/RPM.h"
+#include "Application/Speed.h"
+
 
 /* Constants and types */
 /*============================================================================*/

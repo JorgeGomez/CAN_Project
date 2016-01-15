@@ -23,6 +23,9 @@
 /*----------------------------------------------------------------------------*/
 /*  1.1	     | 29/Dec/2015 |                               | Jorge Gomez	  */
 /* Added the selection mode for ADC0                                          */
+/*----------------------------------------------------------------------------*/
+/*  1.1      | 12/Jan/2016 |                               | Jorge Gomez	  */
+/* Added ADC1 PCTL                                                            */
 /*============================================================================*/
 
 /* Includes */
@@ -151,6 +154,8 @@ void sysinit_InitMode(void)
 		
 	/* Select eMIOS0 to use Peripheral Configuration 0 */
 	WRITE_ME_PCTL(PCTL_eMIOS0, 0x0000);
+	/* Select eMIOS1 to use Peripheral Configuration 0 */
+	WRITE_ME_PCTL(PCTL_eMIOS1, 0x0000);
 	/* Select FlexCAN 0 to use Peripheral Configuration 0 */
 	WRITE_ME_PCTL(PCTL_FlexCAN0, 0x0000);
 	/* Select FlexCAN1 to use Peripheral Configuration 0 */
@@ -169,6 +174,8 @@ void sysinit_InitMode(void)
 	WRITE_ME_PCTL(PCTL_SIUL, 0x0000);
 	/* Select ADC0 to use Peripheral Configuration 0 */
 	WRITE_ME_PCTL(PCTL_ADC0, 0x0000);
+	/* Select ADC1 to use Peripheral Configuration 0 */
+	WRITE_ME_PCTL(PCTL_ADC1, 0x0000);
 	
 	/* Select RUN1 mode */
 	sysinit_ChangeMode(MCTL_RUN1);
@@ -187,6 +194,8 @@ void sysinit_InitMode(void)
 		
 	/* Select eMIOS0 to use Peripheral Configuration 0 */
 	WRITE_ME_PCTL(PCTL_eMIOS0, 0x0000);
+	/* Select eMIOS1 to use Peripheral Configuration 0 */
+	WRITE_ME_PCTL(PCTL_eMIOS1, 0x0000);
 	/* Select FlexCAN 0 to use Peripheral Configuration 0 */
 	WRITE_ME_PCTL(PCTL_FlexCAN0, 0x0000);
 		/* Select FlexCAN1 to use Peripheral Configuration 0 */
@@ -205,6 +214,8 @@ void sysinit_InitMode(void)
 	WRITE_ME_PCTL(PCTL_SIUL, 0x0000);
 	/* Select ADC0 to use Peripheral Configuration 0 */
 	WRITE_ME_PCTL(PCTL_ADC0, 0x0000);
+	/* Select ADC1 to use Peripheral Configuration 0 */
+	WRITE_ME_PCTL(PCTL_ADC1, 0x0000);
 
 	
 	/* Select RUN0 mode */

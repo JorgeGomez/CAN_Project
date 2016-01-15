@@ -1,20 +1,18 @@
 /*============================================================================*/
-/*                        			AEP		                                  */
+/*                         			AEP		                                  */
 /*============================================================================*/
 /*                        OBJECT SPECIFICATION                                */
 /*============================================================================*/
 /*!
- * $Source: Kernel.h $
- * $Revision: version 1.0 $
- * $Author: Jose Luis Martinez Vicuña $
- * $Date: Nov/13/2015 $
+ * $Source: Speed.h $
+ * $Revision: 1.0 $
+ * $Author: Jorge Gomez $
+ * $Date: Jan/10/15 $
  */
 /*============================================================================*/
 /* DESCRIPTION :                                                              */
-/** \file
- * This file provides the headers of the functions of Kernel.c which are used
- * to configure the timer that is used to kernel, also the implementation of 
- * the scheduler.
+/** \Speed
+    Provide the functions to control the Period and the DutyCycle of the PWM.
 */
 /*============================================================================*/
 /* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
@@ -28,46 +26,42 @@
 /* utility model or design, are reserved.                                     */
 /*                                                                            */
 /*============================================================================*/
+/*============================================================================*/
 /*                    			OBJECT HISTORY                          	  */
 /*============================================================================*/
 /*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
 /*----------------------------------------------------------------------------*/
-/*   1.0 		|  	Nov/13/15 |added the core of the scheduler|  Jose Martinez*/
 /*----------------------------------------------------------------------------*/
-/*   1.1 		|  	Jan/13/15 |added Angular excecution		  |  Jorge Gomez  */
+/*   1.0 		|  	Jan/10/15 |Creation of the file and added |  Jorge Gomez  */
+/*				|			  |	the functions 				  |				  */
+/*============================================================================*/
+/*                               			 	                              */
 /*============================================================================*/
 /*
- * $Log: Kernel.h  $
+ * $Log: Speed.h  $
   ============================================================================*/
-#ifndef KERNEL_H_
-#define KERNEL_H_
+
+#ifndef SPEED_H_
+#define SPEED_H_
 
 /* Includes */
 /*============================================================================*/
+#include "HAL/eMIOS.h"
 #include "HAL/stdtypedef.h"
-#include "MAL/Tasks.h"
-#include "Application/RPM.h"
-
 
 /* Constants and types */
 /*============================================================================*/
 
 
-
-
 /* Exported Variables */
 /*============================================================================*/
-PUBLIC_DATA T_BOOLEAN rbi_TickFlag;
-PUBLIC_DATA const S_TASK cas_TaskList[NUMBER_OF_TASKS];
-
+PUBLIC_DATA T_UWORD ruw_DutyCycle_PWM;	/*DutyCycle goes from 0 to 1000*/
+PUBLIC_DATA T_UWORD ruw_Period_PWM;		/*Period goes from 0 to 1000*/
+PUBLIC_DATA T_UWORD ruw_Current;		/*Current goes from 0 to 1000*/
 
 /* Exported functions prototypes */
 /*============================================================================*/
+PUBLIC_FCT void Set_DutyCycle_eMIOS1(void);
+PUBLIC_FCT void Set_PeriodPWM_eMIOS1(void);
 
-/* Functions prototypes */
-/*============================================================================*/
-void init_Sch_TimeCntrs(void);
-void Sch_function_execution(void);
-
-
-#endif /* KERNEL_H_  Notice: the file ends with a blank new line to avoid compiler warnings */
+#endif /* SPEED_H_ */
