@@ -130,6 +130,7 @@ void eMIOS0_isr_CH_16_17(void)
 	if(EMIOS_0.CH[DEG_CNT_CH16].CSR.B.FLAG == 1)					/* Checks if the flag of the channel 16 is set*/
 	{
 		rbi_Flag45Deg = TRUE;
+		rauw_RPMsArray[rub_SamplerIndex]++; 
 		EMIOS_0.CH[DEG_CNT_CH16].CSR.B.FLAG = 1;					/* Clears the flag of the channel 16*/
 	}
 }

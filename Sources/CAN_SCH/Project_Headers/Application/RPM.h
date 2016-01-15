@@ -1,18 +1,22 @@
 /*============================================================================*/
-/*                        			AEP		                                  */
+/*                         			AEP		                                  */
 /*============================================================================*/
 /*                        OBJECT SPECIFICATION                                */
 /*============================================================================*/
 /*!
- * $Source: ADC.h $
- * $Revision: version 1.0 $
+ * $Source: RPM.h $
+ * $Revision: 1.0 $
  * $Author: Jorge Gomez $
- * $Date: Dec/28/2015 $
+ * $Date: Jan/10/15 $
  */
 /*============================================================================*/
 /* DESCRIPTION :                                                              */
-/** \ADC
- *  Provide the functions to enable the ADC and get its information
+/** \RPM
+ * This file provides the functions of the Angular Tasks. 
+ * The structure S__ANGULARTASK which receives the function and 
+ * its angular execution.
+ * Also gives the function that calculates the RPM of the motor and publishes
+ * the CAN messages. 
 */
 /*============================================================================*/
 /* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
@@ -31,55 +35,67 @@
 /*============================================================================*/
 /*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
 /*----------------------------------------------------------------------------*/
-/*   1.0 		|  	Dec/28/15 |Creation of the file			  |  Jorge Gomez  */
 /*----------------------------------------------------------------------------*/
-/*   1.1 		|  	Dec/28/15 |Added  corrections and fixes   |  Jorge Gomez  */
+/*   1.0 		|  	Jan/10/15 |Creation of the file and added |  Jorge Gomez  */
+/*				|			  |	the functions 				  |				  */
 /*----------------------------------------------------------------------------*/
-/*   1.2		|  	Dec/29/15 |Added more comments			  |  Jorge Gomez  */
+/*   1.1 		|  	Jan/12/15 |Added the functions:			  |  Jorge Gomez  */
+/*				|			  |RPM_NextSample & Calculate_RPMs|				  */
 /*----------------------------------------------------------------------------*/
-/*   1.3		|  	Jan/04/15 |Correction in function ReadADC |  Jorge Gomez  */
-/*----------------------------------------------------------------------------*/
-/*   1.4		|  	Jan/12/15 | Added interruption of Watchdog|  Jose Martinez*/
+/*   1.2 		|  	Jan/13/15 |Added the function:			  | Jose Luis Mtz */
+/*				|			  |DTC_Function					  |				  */
+/*============================================================================*/
+/*                               			 	                              */
 /*============================================================================*/
 /*
- * $Log: ADC.h  $
+ * $Log: RPM.h  $
   ============================================================================*/
-
-#ifndef ADC_H                               /* To avoid double inclusion */
-#define ADC_H
+#ifndef RPM_H_
+#define RPM_H_
 
 /* Includes */
 /*============================================================================*/
-
-#include "HAL/MPC5606B.h"
+#include "HAL/eMIOS.h"
 #include "HAL/stdtypedef.h"
-#include "HAL/IntcInterrupts.h"
-#include "Application/RPM.h"
+#include "MAL/Can_Manager.h"
+#include "HAL/GPIO.h"
+#include "Application/Speed.h"
 
 /* Constants and types */
 /*============================================================================*/
-/*ADC0 Modes*/
-#define  ONE_SHOT_MODE      0
-#define  SCAN_MODE          1
+typedef void(*T_ANG_FUNC)(void);
 
-/*Channels for ADC0*/
-#define  PWM_DUTY		    1	/*Channel 1 in PB5*/
-#define  PWM_FREC	 	    2	/*Channel 1 in PB6*/
-#define  M_CURRENT		    3	/*Channel 1 in PB7*/
+typedef struct{
+	T_ANG_FUNC PtrFunc;
+	T_UBYTE Angle;
+}S_ANGULARTASK;
+
+typedef enum {
+	ANGULARTASK1,
+	ANGULARTASK2,
+	ANGULARTASK3,
+	/*number of task*/
+	NUMBER_OF_ANG_TASKS
+}E_NUM_ANGULARTASK;
+
+#define HIGH_CURRENT 		1
+#define OK_CURRENT 			0
 
 /* Exported Variables */
 /*============================================================================*/
+PUBLIC_DATA const S_ANGULARTASK cas_AngularTaskList[NUMBER_OF_ANG_TASKS];
+PUBLIC_DATA T_UWORD ruw_MotorRPMs;
+PUBLIC_DATA T_UWORD rauw_RPMsArray[10];
+PUBLIC_DATA T_UBYTE rub_SamplerIndex;
 
 /* Exported functions prototypes */
 /*============================================================================*/
+PUBLIC_FCT void AngularTask_LowRes(void);
+PUBLIC_FCT void AngularTask_MidRes(void);
+PUBLIC_FCT void AngularTask_HiRes(void);
+PUBLIC_FCT void RPM_NextSample(void);
+PUBLIC_FCT void Calculate_RPMs(void);
+PUBLIC_FCT void DTC_Function(T_UBYTE lub_DTCEvent);
+PUBLIC_FCT void Motor_Status(void);
 
-PUBLIC_FCT void ADCModeSelector(T_UBYTE lub_AdcMode);
-PUBLIC_FCT void ADC_Config(void);
-PUBLIC_FCT T_UWORD Read_ADC(T_UBYTE lub_Channel);
-PUBLIC_FCT T_UWORD Read_ADC_1024(T_UBYTE lub_Channel);
-
-/* Functions prototypes */
-/*============================================================================*/
-
-#endif
-/* ADC_H_  Notice: the file ends with a blank new line to avoid compiler warnings */
+#endif /* RPM_H_ */

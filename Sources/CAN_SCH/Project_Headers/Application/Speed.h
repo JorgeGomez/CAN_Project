@@ -1,18 +1,18 @@
 /*============================================================================*/
-/*                        			AEP		                                  */
+/*                         			AEP		                                  */
 /*============================================================================*/
 /*                        OBJECT SPECIFICATION                                */
 /*============================================================================*/
 /*!
- * $Source: ADC.h $
- * $Revision: version 1.0 $
+ * $Source: Speed.h $
+ * $Revision: 1.0 $
  * $Author: Jorge Gomez $
- * $Date: Dec/28/2015 $
+ * $Date: Jan/10/15 $
  */
 /*============================================================================*/
 /* DESCRIPTION :                                                              */
-/** \ADC
- *  Provide the functions to enable the ADC and get its information
+/** \Speed
+    Provide the functions to control the Period and the DutyCycle of the PWM.
 */
 /*============================================================================*/
 /* COPYRIGHT (C) CONTINENTAL AUTOMOTIVE 2014                                  */
@@ -31,55 +31,37 @@
 /*============================================================================*/
 /*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
 /*----------------------------------------------------------------------------*/
-/*   1.0 		|  	Dec/28/15 |Creation of the file			  |  Jorge Gomez  */
 /*----------------------------------------------------------------------------*/
-/*   1.1 		|  	Dec/28/15 |Added  corrections and fixes   |  Jorge Gomez  */
-/*----------------------------------------------------------------------------*/
-/*   1.2		|  	Dec/29/15 |Added more comments			  |  Jorge Gomez  */
-/*----------------------------------------------------------------------------*/
-/*   1.3		|  	Jan/04/15 |Correction in function ReadADC |  Jorge Gomez  */
-/*----------------------------------------------------------------------------*/
-/*   1.4		|  	Jan/12/15 | Added interruption of Watchdog|  Jose Martinez*/
+/*   1.0 		|  	Jan/10/15 |Creation of the file and added |  Jorge Gomez  */
+/*				|			  |	the functions 				  |				  */
+/*============================================================================*/
+/*                               			 	                              */
 /*============================================================================*/
 /*
- * $Log: ADC.h  $
+ * $Log: Speed.h  $
   ============================================================================*/
 
-#ifndef ADC_H                               /* To avoid double inclusion */
-#define ADC_H
+#ifndef SPEED_H_
+#define SPEED_H_
 
 /* Includes */
 /*============================================================================*/
-
-#include "HAL/MPC5606B.h"
+#include "HAL/eMIOS.h"
 #include "HAL/stdtypedef.h"
-#include "HAL/IntcInterrupts.h"
-#include "Application/RPM.h"
 
 /* Constants and types */
 /*============================================================================*/
-/*ADC0 Modes*/
-#define  ONE_SHOT_MODE      0
-#define  SCAN_MODE          1
 
-/*Channels for ADC0*/
-#define  PWM_DUTY		    1	/*Channel 1 in PB5*/
-#define  PWM_FREC	 	    2	/*Channel 1 in PB6*/
-#define  M_CURRENT		    3	/*Channel 1 in PB7*/
 
 /* Exported Variables */
 /*============================================================================*/
+PUBLIC_DATA T_UWORD ruw_DutyCycle_PWM;	/*DutyCycle goes from 0 to 1000*/
+PUBLIC_DATA T_UWORD ruw_Period_PWM;		/*Period goes from 0 to 1000*/
+PUBLIC_DATA T_UWORD ruw_Current;		/*Current goes from 0 to 1000*/
 
 /* Exported functions prototypes */
 /*============================================================================*/
+PUBLIC_FCT void Set_DutyCycle_eMIOS1(void);
+PUBLIC_FCT void Set_PeriodPWM_eMIOS1(void);
 
-PUBLIC_FCT void ADCModeSelector(T_UBYTE lub_AdcMode);
-PUBLIC_FCT void ADC_Config(void);
-PUBLIC_FCT T_UWORD Read_ADC(T_UBYTE lub_Channel);
-PUBLIC_FCT T_UWORD Read_ADC_1024(T_UBYTE lub_Channel);
-
-/* Functions prototypes */
-/*============================================================================*/
-
-#endif
-/* ADC_H_  Notice: the file ends with a blank new line to avoid compiler warnings */
+#endif /* SPEED_H_ */

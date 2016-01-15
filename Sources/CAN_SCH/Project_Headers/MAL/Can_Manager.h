@@ -47,6 +47,8 @@
 /* Includes */
 /*============================================================================*/
 #include "HAL/Can.h"
+#include "Application/Speed.h"
+#include "Application/RPM.h"
 
 /* Constants and types */
 /*============================================================================*/
@@ -87,9 +89,9 @@ typedef union{
 
 /* Exported Variables */
 /*============================================================================*/ 
-extern M_ENG_RPM Eng_RPM;
-extern M_ENG_SPEED Eng_Speed;
-extern M_ENG_DTC Eng_DTC;
+extern M_ENG_RPM Eng_RPM; 		/*ID:100*/
+extern M_ENG_SPEED Eng_Speed;	/*ID:101*/
+extern M_ENG_DTC Eng_DTC;		/*ID:102*/
 
 /* Exported functions prototypes */
 /*============================================================================*/

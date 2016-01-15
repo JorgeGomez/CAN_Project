@@ -28,16 +28,13 @@
 /* utility model or design, are reserved.                                     */
 /*                                                                            */
 /*============================================================================*/
+/*                    			OBJECT HISTORY                          	  */
 /*============================================================================*/
-/*                    REUSE HISTORY - taken over from                         */
-/*============================================================================*/
-/*  DATABASE           |        PROJECT     | FILE VERSION (AND INSTANCE)     */
+/*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
 /*----------------------------------------------------------------------------*/
-/*                     |      Scheduler     |            1.0                  */
-/*					   |					|      Project_Headers/MAL  	  */
-/*============================================================================*/
-/*                               OBJECT HISTORY                               */
-/* version 1.0		   |     11/!3/2015     |  Jose Luis Martinez Vicuña      */
+/*   1.0 		|  	Nov/13/15 |added the core of the scheduler|  Jose Martinez*/
+/*----------------------------------------------------------------------------*/
+/*   1.1 		|  	Jan/13/15 |added Angular excecution		  |  Jorge Gomez  */
 /*============================================================================*/
 /*
  * $Log: Kernel.h  $
@@ -49,6 +46,7 @@
 /*============================================================================*/
 #include "HAL/stdtypedef.h"
 #include "MAL/Tasks.h"
+#include "Application/RPM.h"
 
 
 /* Constants and types */

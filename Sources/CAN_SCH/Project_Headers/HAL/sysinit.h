@@ -21,6 +21,10 @@
 /*  1.0      | 17/may/2010 |                               | Carlos Calvillo  */
 /* Initial version for the Smart Car Race 2010 contest using Freescale        */
 /* Bolero micro.                                                              */
+/*----------------------------------------------------------------------------*/
+/*  1.1      | 12/Jan/2016 |                               | Jorge Gomez	  */
+/* Added ADC1 PCTL                                                            */
+/*============================================================================*/
 /*============================================================================*/
 #ifndef SYSINIT_H                                /* To avoid double inclusion */
 #define SYSINIT_H
@@ -149,6 +153,7 @@ enum my_enum
 #define PCTL_FlexCAN4		20
 #define PCTL_FlexCAN5		21
 #define PCTL_ADC0			32
+#define PCTL_ADC1			33
 #define PCTL_I2C0			44
 #define PCTL_LINFlex0		48
 #define PCTL_LINFlex1		49

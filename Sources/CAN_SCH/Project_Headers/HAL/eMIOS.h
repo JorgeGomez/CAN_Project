@@ -57,6 +57,7 @@
 #include "HAL/MPC5606B.h"
 #include "HAL/stdtypedef.h"
 #include "HAL/IntcInterrupts.h"
+#include "Application/RPM.h"
 
 /* Constants and types */
 /*============================================================================*/
@@ -95,7 +96,7 @@ T_UWORD Read_eMIOS1_RegB(void);
 void Write_eMIOS1_RegB(T_UWORD luw_BValue);
 T_UWORD Read_eMIOS1_RegA(void);
 void Write_eMIOS1_RegA(T_UWORD luw_AValue);
-void Set_Global_Prescaler(T_UBYTE lub_GlobalPrescalerValue);
+void Set_Global_Prescaler(T_UWORD lub_GlobalPrescalerValue);
 
 
 /* Functions prototypes */

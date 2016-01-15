@@ -32,8 +32,9 @@
 /*============================================================================*/
 /*  DATABASE           |        PROJECT     | FILE VERSION (AND INSTANCE)     */
 /*----------------------------------------------------------------------------*/
-/*                     |       			    |              1.0                */
-/*					   |					|       					       */
+/*   1.0 		|  31/10/2008 |								  |Abraham Tezmol */
+/*----------------------------------------------------------------------------*/
+/*   1.1 		|  13/01/2016 |	Added External LED			  |Jorge Gomez	  */
 /*============================================================================*/
 /*
  * $Log: GPIO.h  $
@@ -56,6 +57,7 @@
 #define LED2       					69
 #define LED3       					70
 #define LED4        				71
+#define EXTERNAL_LED1				79
 
 #define GPIO_INPUT					0
 #define GPIO_OUTPUT					1
@@ -84,7 +86,6 @@
 
 void vfnGPIO_Init_channel(uint8_t channel, uint8_t input_output, uint8_t Open_drain);
 void vfnGPIO_Output(uint8_t channel, uint8_t logical_value);
-void vfnGPIO_FlashMainLED(void);
 void vfnGPIO_LED_Init(void);
 
 

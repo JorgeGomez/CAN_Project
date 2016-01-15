@@ -36,6 +36,8 @@
 /*  REVISION 	|  		DATE  |     COMMENT	     	 	 	  |AUTHOR  		  */
 /*----------------------------------------------------------------------------*/
 /*   1.0 		|  	Nov/13/15 |added the core of the scheduler|  Jorge Gomez  */
+/*----------------------------------------------------------------------------*/
+/*   1.1 		|  	Jan/13/15 |added Angular excecution		  |  Jorge Gomez  */
 /*============================================================================*/
 /*                               			 	                              */
 /*============================================================================*/
@@ -57,6 +59,7 @@
 /*============================================================================*/
 
 T_ULONG raul_TimeCounter[NUMBER_OF_TASKS];
+T_ULONG raul_AngleCounter[NUMBER_OF_ANG_TASKS] = {0};
 
 
 /* Private functions prototypes */
@@ -90,6 +93,7 @@ void init_Sch_TimeCntrs(void)
 	}
 }
 
+
 /**************************************************************
  *  Name                 :  Sch_function_execution
  *  Description          :  Function of Scheduler 
@@ -101,9 +105,11 @@ void init_Sch_TimeCntrs(void)
 void Sch_function_execution(void)
 {
 	T_ULONG lul_ArrayPosition;
+	T_ULONG lul_AngularArrayPosition;
+	
 	while(1)
 		{
-			if(rbi_TickFlag == TRUE)
+			if(rbi_TickFlag != FALSE)
 			{
 				rbi_TickFlag = FALSE;
 				for(lul_ArrayPosition = 0; lul_ArrayPosition < NUMBER_OF_TASKS; lul_ArrayPosition++)
@@ -116,6 +122,22 @@ void Sch_function_execution(void)
 					{
 						raul_TimeCounter[lul_ArrayPosition] = cas_TaskList[lul_ArrayPosition].Period;
 						cas_TaskList[lul_ArrayPosition].PtrFunc();
+					}
+				}
+			}
+			if(rbi_Flag45Deg != FALSE)
+			{
+				rbi_Flag45Deg = FALSE;
+				for(lul_AngularArrayPosition = 0; lul_AngularArrayPosition < NUMBER_OF_ANG_TASKS; lul_AngularArrayPosition++)
+				{
+					if(raul_AngleCounter[lul_AngularArrayPosition] != 0)
+					{
+						raul_AngleCounter[lul_AngularArrayPosition]--;
+					}
+					else
+					{
+						raul_AngleCounter[lul_AngularArrayPosition] = cas_AngularTaskList[lul_AngularArrayPosition].Angle;
+						cas_AngularTaskList[lul_AngularArrayPosition].PtrFunc();
 					}
 				}
 			}
